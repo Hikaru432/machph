@@ -74,6 +74,7 @@ if ($user_car_result && mysqli_num_rows($user_car_result) > 0) {
     die('Error fetching user and car information: ' . mysqli_error($conn));
 }
 
+
 ?>
 
 <!DOCTYPE html>
@@ -85,7 +86,10 @@ if ($user_car_result && mysqli_num_rows($user_car_result) > 0) {
     <link rel="stylesheet" href="css/machvalidate.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"></script>
+    <!-- Your other scripts -->
 </head>
+
 <body>
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -127,213 +131,177 @@ if ($user_car_result && mysqli_num_rows($user_car_result) > 0) {
 
 <div class="container mx-auto mt-5">
     <!-- User and Car Information -->
-
-    <ul class="flex justify-normal items-center " id="container">
-        <li>
-          <?php
-            if($user_car_info['image'] == ''){
-                  echo '<img src="images/default-avatar.png" class="w-20 h-20 rounded-full">';
-                }else{
-                    echo '<img src="uploaded_img/' . $user_car_info['image'] . '" class="w-20 h-20 rounded-full">';
-                }
+    <div class="profilevalidate bg-white p-4 rounded-md shadow-md mb-4">
+        <div class="vimage">
+            <?php
+            if ($user_car_info['image'] == '') {
+                echo '<img src="images/default-avatar.png">';
+            } else {
+                echo '<img src="uploaded_img/' . $user_car_info['image'] . '">';
+            }
             ?>
-        </li>
-        <li class="px-4"><p class="mb-2 font-medium">User Name: <?php echo '<span class="font-normal">'.$user_car_info['name'] . '</span>'; ?></p></li>
-        <li class="px-4"><p class="mb-2 font-medium">Car Model: <?php echo '<span class="font-normal">'. $carmodel . '</span>'; ?></p></li>
-        <li class="px-4"><p class="mb-2 font-medium">Plate #:  <?php echo '<span class="font-normal">'. $plateno . '</span>'; ?></p></li>
-    </ul>
+            <p class="mb-2">Name: <?php echo $user_car_info['name']; ?></p>
+            <!-- Display car model and plate number -->
+            <p class="mb-2">Car Model: <?php echo $carmodel; ?></p>
+            <p class="mb-2">Plate Number: <?php echo $plateno; ?></p>
+        </div>
+    </div>
 
-    <div class="for-major-container bg-gray-100 p-4 rounded-md shadow-md">
-    <h2 class="text-2xl font-bold mb-4">Major</h2>
-    <div class="grid grid-cols-2 gap-4">
+
+    <div class="for-major-container bg-white p-4 rounded-md shadow-md">
+        <h2 class="text-2xl font-bold mb-4">Major</h2>
+
         <?php if (!empty($engine_overhaul_data)) { ?>
-            <div class="px-4 py-2 border border-black">
-                <strong>Engine Overhaul:</strong><br>
+            <div>
+                <strong>Engine Overhaul:</strong>
                 <?php echo implode(', ', $engine_overhaul_data); ?>
             </div>
+        <?php } else { ?>
+            <p><strong>Engine overhaul:</strong>Good</p>
         <?php } ?>
 
         <?php if (!empty($engine_low_power_data)) { ?>
-            <div class="px-4 py-2 border border-black">
-                <strong>Engine Low Power:</strong><br>
+            <div>
+                <strong>Engine Low Power:</strong>
                 <?php echo implode(', ', $engine_low_power_data); ?>
             </div>
+        <?php } else { ?>
+            <p><strong>Engine low power:</strong> Good</p>
         <?php } ?>
 
         <?php if (!empty($electrical_problem_data)) { ?>
-            <div class="px-4 py-2 border border-black">
-                <strong>Electrical Problems:</strong><br>
+            <div>
+                <strong>Electrical Problems:</strong>
                 <?php echo implode(', ', $electrical_problem_data); ?>
             </div>
+        <?php } else { ?>
+            <p><strong>Electrical problem:</strong> Good</p>
         <?php } ?>
     </div>
-</div>
-
-
 
     <!-- Maintenance part -->
     <div class="for-maintenance-container bg-white p-4 mt-4 rounded-md shadow-md">
-    <h2 class="text-2xl font-bold mb-4">Maintenance</h2>
-    <div class="grid grid-cols-2 gap-4">
+        <h2 class="text-2xl font-bold mb-4">Maintenance</h2>
+
         <?php if (!empty($battery_data)) { ?>
-            <div class="px-4 py-2 border border-black">
-                <strong>Battery:</strong><br>
+            <div>
+                <strong>Battery:</strong>
                 <?php echo implode(', ', $battery_data); ?>
             </div>
+        <?php } else { ?>
+            <p><strong>Battery:</strong> Good</p>
         <?php } ?>
-        
+
         <?php if (!empty($light_data)) { ?>
-            <div class="px-4 py-2 border border-black">
-                <strong>Light:</strong><br>
+            <div>
+                <strong>Light:</strong>
                 <?php echo implode(', ', $light_data); ?>
             </div>
+        <?php } else { ?>
+            <p><strong>Light:</strong> Good</p>
         <?php } ?>
-        
+
         <?php if (!empty($oil_data)) { ?>
-            <div class="px-4 py-2 border border-black">
-                <strong>Oil:</strong><br>
+            <div>
+                <strong>Oil:</strong>
                 <?php echo implode(', ', $oil_data); ?>
             </div>
+        <?php } else { ?>
+            <p><strong>Oil:</strong> Good</p>
         <?php } ?>
-        
+
         <?php if (!empty($water_data)) { ?>
-            <div class="px-4 py-2 border border-black">
-                <strong>Water:</strong><br>
+            <div>
+                <strong>Water:</strong>
                 <?php echo implode(', ', $water_data); ?>
             </div>
+        <?php } else { ?>
+            <p><strong>Water:</strong> Good</p>
         <?php } ?>
-        
+
         <?php if (!empty($brake_data)) { ?>
-            <div class="px-4 py-2 border border-black">
-                <strong>Brake:</strong><br>
+            <div>
+                <strong>Brake:</strong>
                 <?php echo implode(', ', $brake_data); ?>
             </div>
+        <?php } else { ?>
+            <p><strong>Brake:</strong> Good</p>
         <?php } ?>
-        
+
         <?php if (!empty($air_data)) { ?>
-            <div class="px-4 py-2 border border-black">
-                <strong>Air:</strong><br>
+            <div>
+                <strong>Air:</strong>
                 <?php echo implode(', ', $air_data); ?>
             </div>
+        <?php } else { ?>
+            <p><strong>Air:</strong> Good</p>
         <?php } ?>
-        
+
         <?php if (!empty($gas_data)) { ?>
-            <div class="px-4 py-2 border border-black">
-                <strong>Gas:</strong><br>
+            <div>
+                <strong>Gas:</strong>
                 <?php echo implode(', ', $gas_data); ?>
             </div>
+        <?php } else { ?>
+            <p><strong>Gas:</strong> Good</p>
         <?php } ?>
-        
+
         <?php if (!empty($tire_data)) { ?>
-            <div class="px-4 py-2 border border-black">
-                <strong>Tire:</strong><br>
+            <div>
+                <strong>Tire:</strong>
                 <?php echo implode(', ', $tire_data); ?>
             </div>
+        <?php } else { ?>
+            <p><strong>Tire:</strong> Good</p>
         <?php } ?>
     </div>
-</div>
 
     <!-- Approval Reason -->
-<!-- Approval Reason -->
-<div class="bg-white p-4 rounded-md shadow-md">
-    <p><span class="font-bold">Reason:</span> <?php echo getApprovalReason($conn, $user_id, $car_id); ?></p>
-</div>
+    <div class="bg-white p-4 rounded-md shadow-md">
+        <p><span class="font-bold">Reason:</span> <?php echo getApprovalReason($conn, $user_id, $car_id); ?></p>
+    </div>
 
-<button id="validBtn" class="mt-4 bg-green-500 text-white p-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:border-green-300">
-    Valid
-</button>
-<button id="invalidBtn" class="mt-4 bg-red-500 text-white p-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:border-red-300">
-    Invalid
-</button>
+    <button id="validBtn" class="mt-4 bg-green-500 text-white p-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:border-green-300">
+        Valid
+    </button>
+    <button id="invalidBtn" class="mt-4 bg-red-500 text-white p-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:border-red-300">
+        Invalid
+    </button>
 
-<!-- Modal -->
-<div class="modal fade" id="validationModal" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true">
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h5 class="modal-title" id="validationModalLabel">Validation Status</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <div class="modal-body">
-            <p id="validationMessage"></p>
-            <form id="validationForm">
-               <div class="mb-3">
-                  <label for="comment" class="form-label">Comment</label>
-                  <textarea class="form-control" id="comment" rows="3"></textarea>
-               </div>
-            </form>
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button id="saveChangesBtn" type="button" class="btn btn-primary">Save changes</button>
-         </div>
-      </div>
-   </div>
-</div>
+    <script>
+        document.getElementById('validBtn').addEventListener('click', function () {
+            updateValidation('valid');
+        });
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-   function showModal(message) {
-      // Set the validation message in the modal body
-      document.getElementById('validationMessage').innerText = message;
-      // Open the modal
-      var myModal = new bootstrap.Modal(document.getElementById('validationModal'));
-      myModal.show();
-   }
+        document.getElementById('invalidBtn').addEventListener('click', function () {
+            const comment = prompt('Enter your comment for invalidation:');
+            if (comment !== null) {
+                updateValidation('invalid', comment);
+            }
+        });
 
-   document.getElementById('validBtn').addEventListener('click', function () {
-      updateValidation('valid');
-   });
+        function updateValidation(status, comment = null) {
+            const user_id = <?php echo $user_id; ?>;
+            const car_id = <?php echo $car_id; ?>;
 
-   document.getElementById('invalidBtn').addEventListener('click', function () {
-      // Show the modal
-      showModal('Please enter your comment for invalidation.');
-      // Focus on the comment textarea
-      document.getElementById('comment').focus();
-   });
+            // Use AJAX to update validation status
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'update_validation.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Handle the response if needed
+                    // You can reload the page or update UI elements
+                    alert('Validation status updated successfully.');
 
-   document.getElementById('saveChangesBtn').addEventListener('click', function () {
-      const comment = document.getElementById('comment').value;
-      if (comment !== '') {
-         updateValidation('invalid', comment);
-      }
-   });
+                    // Redirect to homemanager.php
+                    window.location.href = 'homemanager.php';
+                }
+            };
 
-   function updateValidation(status, comment = null) {
-      const user_id = <?php echo $user_id; ?>;
-      const car_id = <?php echo $car_id; ?>;
-
-      // Use AJAX to update validation status
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', 'update_validation.php', true);
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      xhr.onreadystatechange = function () {
-         if (xhr.readyState === 4 && xhr.status === 200) {
-            // Close the modal
-            var myModal = new bootstrap.Modal(document.getElementById('validationModal'));
-            myModal.hide();
-            // Display a success message
-            showAlert('Validation status updated successfully.');
-            // Redirect to homemanager.php after a short delay (optional)
-            setTimeout(function () {
-               window.location.href = 'homemanager.php';
-            }, 2000); // 2000 milliseconds = 2 seconds
-         }
-      };
-
-      const data = 'user_id=' + user_id + '&car_id=' + car_id + '&status=' + status + '&comment=' + comment;
-      xhr.send(data);
-   }
-
-   function showAlert(message) {
-      // Set the validation message in the modal body
-      document.getElementById('validationMessage').innerText = message;
-      // Open the modal
-      var myModal = new bootstrap.Modal(document.getElementById('validationModal'));
-      myModal.show();
-   }
+            const data = 'user_id=' + user_id + '&car_id=' + car_id + '&status=' + status + '&comment=' + comment;
+            xhr.send(data);
+        }
 </script>
-
 </body>
 </html>

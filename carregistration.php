@@ -3,6 +3,13 @@ include 'config.php';
 
 session_start(); // Start the session
 
+// Retrieve list of manufacturers from the database
+$manufacturer_query = mysqli_query($conn, "SELECT DISTINCT manufacturer FROM car");
+$manufacturers = [];
+while ($row = mysqli_fetch_assoc($manufacturer_query)) {
+    $manufacturers[] = $row['manufacturer'];
+}
+
 if (isset($_POST['submit'])) {
     // Check if the necessary form fields are set
     if (
@@ -61,12 +68,29 @@ if (isset($_SESSION['user_id'])) {
         die('Error in car query: ' . mysqli_error($conn));
     }
 }
+
+// Fetch manufacturers from the database
+$manufacturer_query = mysqli_query($conn, "SELECT * FROM manufacturer");
+
+if (!$manufacturer_query) {
+    die('Error in manufacturer query: ' . mysqli_error($conn));
+}
+
+// Fetch car models from the database
+$car_model_query = mysqli_query($conn, "SELECT * FROM car_model");
+
+// Check if the query was successful
+if (!$car_model_query) {
+    die('Error in car model query: ' . mysqli_error($conn));
+}
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register Car</title>
@@ -78,6 +102,7 @@ if (isset($_SESSION['user_id'])) {
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 </head>
+
 <body>
     <div class="form-container">
         <form action="" method="post" enctype="multipart/form-data">
@@ -91,20 +116,23 @@ if (isset($_SESSION['user_id'])) {
             ?>
             <!-- Remove the input field for email -->
             <input type="text" name="plateno" placeholder="Enter Plate number" class="box" required>
-               
+
             <select name="manufacturer" placeholder="Enter manufacturer" id="manufacturer" class="box">
                 <option>select manufacturer</option>
-                <option value="Toyota">Toyota</option>
-                <option value="Honda">Honda</option>
-                <option value="Suzuki">Suzuki</option>
-            </select>
-            <select name="carmodel" placeholder="Enter car model" class="box" id="carmodel">
-            <option>select car model</option>
+                <?php
+                // Display manufacturers from the database
+                while ($manufacturer = mysqli_fetch_assoc($manufacturer_query)) {
+                    echo '<option value="' . $manufacturer['id'] . '">' . $manufacturer['name'] . '</option>';
+                }
+                ?>
             </select>
 
+            <select name="carmodel" placeholder="Enter car model" class="box" id="carmodel">
+                <option>select car model</option>
+            </select>
             <input type="text" name="year" placeholder="Year" class="box" required>
             <input type="text" name="bodyno" placeholder="Enter body number" class="box" required>
-           
+
             <select name="enginecc" placeholder="Enter Engine cc" class="box" required>
                 <option value="1000">1000cc</option>
                 <option value="1200">1200cc</option>
@@ -140,7 +168,7 @@ if (isset($_SESSION['user_id'])) {
                         while ($row = mysqli_fetch_assoc($car_select)) :
                         ?>
                             <tr>
-                                <td><?php echo isset($row['manufacturer']) ? $row['manufacturer'] : ''; ?></td>
+                                <td><?php echo isset($row['manufacturer_name']) ? $row['manufacturer_name'] : ''; ?></td>
                                 <td><?php echo isset($row['plateno']) ? $row['plateno'] : ''; ?></td>
                                 <td><a href="carprofile.php?car_id=<?php echo $row['car_id']; ?>">View Profile</a></td>
                             </tr>
@@ -153,44 +181,29 @@ if (isset($_SESSION['user_id'])) {
 
 
     <!-- ... (your existing script section) ... -->
-</body>
 
-
-    
-   <!-- <script> -->
-   <script>
-        // Function to update car model options based on the selected manufacturer
-        function updateCarModels() {
-            var manufacturer = $('#manufacturer').val();
-            var carModels;
-
-            // Define car models based on the selected manufacturer
-            switch (manufacturer) {
-                case 'Toyota':
-                    carModels = ['Fortuner', 'Yaris', 'Innova'];
-                    break;
-                case 'Honda':
-                    carModels = ['Civic', 'Pilot', 'Brio'];
-                    break;
-                case 'Suzuki':
-                    carModels = ['Jimny', 'Vitara', 'Ignis'];
-                    break;
-                default:
-                    carModels = [];
+    <!-- <script> -->
+    <script>
+    // Function to update car model options based on the selected manufacturer
+    function updateCarModels() {
+        var manufacturer_id = $('#manufacturer').val();
+        $.ajax({
+            url: 'get_carmodels.php',
+            type: 'POST',
+            data: {
+                manufacturer_id: manufacturer_id
+            },
+            success: function(response) {
+                $('#carmodel').html(response);
             }
-
-            // Update car model options
-            var carModelSelect = $('#carmodel');
-            carModelSelect.empty();
-            $.each(carModels, function(index, value) {
-                carModelSelect.append('<option value="' + value + '">' + value + '</option>');
-            });
-        }
-
-        // Attach the function to the change event of the manufacturer dropdown
-        $(document).ready(function() {
-            $('#manufacturer').change(updateCarModels);
         });
-    </script>
+    }
+
+    // Attach the function to the change event of the manufacturer dropdown
+    $(document).ready(function() {
+        $('#manufacturer').change(updateCarModels);
+    });
+</script>
 </body>
+
 </html>

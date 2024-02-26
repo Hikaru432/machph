@@ -103,7 +103,7 @@
     
       <!-- Upper nav -->
 
-    <div class="nav-container">
+    <div class="nav-container" style="top: 0px;">
         <div class="upper-nav-container">
                 <div class="img-icon-upper-nav">
                     <li><img class="upper-nav-icon-three" src="img/facebook.png" alt="facebook"></li>

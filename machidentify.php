@@ -65,7 +65,7 @@ if(mysqli_num_rows($select) > 0){
    die('No user found');
 }
 ?>
-
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,265 +74,340 @@ if(mysqli_num_rows($select) > 0){
     <title>Profile</title>
     <link rel="stylesheet" href="css/machidentify.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
 </head>
 <body>
 
  
 <body class="bg-gray-100">
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Mechanic</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="homemechanic.php">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                </li>
-            </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-        </div>
+
+
+<nav class="bg-white border-gray-200 dark:bg-gray-900">
+  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+    <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
+        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">MachPH</span>
+    </a>
+    <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
+        <span class="sr-only">Open main menu</span>
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+        </svg>
+    </button>
+    <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+      <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+        <li>
+          <a href="#" class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Home</a>
+        </li>
+        <li>
+          <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">About</a>
+        </li>
+        <li>
+          <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Services</a>
+        </li>
+        <li>
+          <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Pricing</a>
+        </li>
+        <li>
+          <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Contact</a>
+        </li>
+      </ul>
     </div>
+  </div>
 </nav>
 
+
+
 <div class="container mx-auto mt-8">
-
-    <!-- User Profile Section -->
-    <div class="profile-container bg-white p-6 rounded-lg shadow-md">
    
-    <div class="profile">
-        <?php
+    <!-- For profile -->
+    <ul class="flex justify-normal items-center " id="container">
+        <li>
+          <?php
             if($fetch['image'] == ''){
-                echo '<img src="images/default-avatar.png">';
-            }else{
-                echo '<img src="uploaded_img/'.$fetch['image'].'">';
-            }
-        ?>
-    </div>
-        <p class="mb-2">User Name: <?php echo $user_data['name']; ?></p>
-        <p class="mb-2">Manufacturer: <?php echo $car_data['manufacturer']; ?></p>
-        <p class="mb-2">Car Model: <?php echo $car_data['carmodel']; ?></p>
-        <p class="mb-2">Plate #: <?php echo $car_data['plateno']; ?></p>
-        <!-- Display other user information as needed -->
-    </div>
+                  echo '<img src="images/default-avatar.png" class="w-20 h-20 rounded-full">';
+                }else{
+                    echo '<img src="uploaded_img/' . $fetch['image'] . '" class="w-20 h-20 rounded-full">';
+                }
+            ?>
+        </li>
+        <li class="px-4"><p class="mb-2 font-medium">User Name: <?php echo '<span class="font-normal">'. $user_data['name'] . '</span>'; ?></p></li>
+        <li class="px-4"><p class="mb-2 font-medium">Manufacturer: <?php echo '<span class="font-normal">'. $car_data['manufacturer'] . '</span>'; ?></p></li>
+        <li class="px-4"><p class="mb-2 font-medium">Car Model: <?php echo '<span class="font-normal">'. $car_data['carmodel'] . '</span>'; ?></p></li>
+        <li class="px-4"><p class="mb-2 font-medium">Plate #:  <?php echo '<span class="font-normal">'. $car_data['plateno'] . '</span>'; ?></p></li>
+    </ul>
 
-    <!-- Car Details Section -->
-    <div class="profile-container bg-white p-6 mt-8 rounded-lg shadow-md">
-      
-        <form action="update_repair.php" method="post" class="mt-4">
-            
-                 <!-- Major Section -->
-        <h2 class="text-xl font-bold mb-4">Major</h2>
+    <!-- Car details -->
 
-        <div id="eo_container" class="bg-white p-4 rounded-md shadow-md">
-            <label class="block text-sm font-medium text-gray-600"><span class="font-bold text=[#000000]">Engine Overhaul:</span>
-                <span id="eo_status" class="ml-2 text-red-500"><?php echo ($service_data['eo'] == 1) ? 'Urgent Need' : ''; ?></span>
-                <input type="checkbox" name="engine_overhaul_problems[]" value="Piston ring" class="mr-2">
-                <span>Piston Ring</span>
-                <input type="checkbox" name="engine_overhaul_problems[]" value="Head gaskit" class="mr-2">
-                <span>Head Gasket</span>
-                <input type="checkbox" name="engine_overhaul_problems[]" value="Oil circulation" class="mr-2">
-                <span>Oil Circulation</span>
-            </label>
+    <div class="w-full h-screen">
+        <form action="update_repair.php" method="post">
+          <div style="margin-top: 50px;">
+
+            <h1 class="text-3xl font-bold">Major</h1>
+                <!-- Engine overhaul -->
+                <div class="flex justify-evenly flex-row items-center py-4">
+
+                    <div id="eo_container" class="border-2 border-gray-600 p-3 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                        <label class="block">
+                            <span class="font-bold text-">Engine Overhaul</span>
+                            <span id="eo_status" class="ml-9 text-red-500"><?php echo ($service_data['eo'] == 1) ? 'Urgent Need' : ''; ?></span>
+                            <div class="flex flex-col items-start pt-4 checkbox-group">
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="engine_overhaul_problems[]" value="Piston ring" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Piston Ring</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="engine_overhaul_problems[]" value="Head gasket" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Head Gasket</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="engine_overhaul_problems[]" value="Oil circulation" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Oil Circulation</span>
+                                </span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Engine low power -->
+                    <div id="elp_container" class="border-2 border-gray-600 p-3 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                        <label class="block">
+                            <span class="font-bold text-">Engine Low Power</span>
+                            <span id="eo_status" class="ml-9 text-red-500"><?php echo ($service_data['elp'] == 2) ? 'Urgent Need' : ''; ?></span>
+                            <div class="flex flex-col items-start pt-4 checkbox-group">
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="engine_low_power_problems[]" value="Piston ring" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Mass Air Flow (MAF)</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="engine_low_power_problems[]" value="Head gasket" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Throttle Body</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="engine_low_power_problems[]" value="Oil circulation" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Fuel System</span>
+                                </span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Electrical problem -->
+                    <div id="ep_container" class="border-2 border-gray-600 p-3 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                        <label class="block">
+                            <span class="font-bold text-">Engine Overhaul</span>
+                            <span id="eo_status" class="ml-9 text-red-500"><?php echo ($service_data['ep'] == 3) ? 'Urgent Need' : ''; ?></span>
+                            <div class="flex flex-col items-start pt-4 checkbox-group">
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="electrical_problems[]" value="Piston ring" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Spark Plugs</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="electrical_problems[]" value="Head gasket" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Ignition System</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="electrical_problems[]" value="Oil circulation" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Electronic Module</span>
+                                </span>
+                            </div>
+                        </label>
+                    </div>
+                        
+                </div>
+            </div>
+
+            <br>
+            <hr style="border-color: black;">
+            <br>
+    <!-- Minor part -->
+
+     <div>
+            <h1 class="text-3xl font-bold">Minor</h1>
+                <div class="flex justify-evenly flex-wrap items-center py-4">
+                        <!-- Battery part -->
+                        <div id="battery_container" class="border-2 border-gray-600 py-8 px-8 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            <label class="block <?php echo mapMaintenanceStatusAndColor($service_data['battery']); ?>">
+                                <span class="font-bold text-black">Battery:</span>
+                                <span class="text-sm font-medium"><?php echo mapMaintenanceStatus($service_data['battery']); ?></span>
+                            </label>
+                            <div class="flex flex-col items-start pt-4 checkbox-group">
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="battery_problems[]" value="Battery voltage" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Battery Voltage</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="battery_problems[]" value="Battery terminals" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Battery Terminals</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="battery_problems[]" value="Load test" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Load Test</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Light -->
+                        <div id="light_container" class="border-2 border-gray-600 py-8 px-6 ml-8 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            <label class="block <?php echo mapMaintenanceStatusAndColor($service_data['light']); ?>">
+                                <span class="font-bold text-black">Light:</span>
+                                <span class="text-sm font-medium"><?php echo mapMaintenanceStatus($service_data['light']); ?></span>
+                            </label>
+                            <div class="flex flex-col items-start pt-4 checkbox-group">
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="light_problems[]" value="Check bulbs" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Check Bulbs (CB)</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="light_problems[]" value="Inspect fuses" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Inspect Fuses</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="light_problems[]" value="Check wirings" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Check Wirings</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Oil -->
+
+                        <div id="oil_container" class="border-2 border-gray-600 py-8 px-6 ml-8 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            <label class="block <?php echo mapMaintenanceStatusAndColor($service_data['oil']); ?>">
+                                <span class="font-bold text-black">Oil:</span>
+                                <span class="text-sm font-medium "><?php echo mapMaintenanceStatus($service_data['oil']); ?></span>
+                            </label>
+                            <div class="flex flex-col items-start pt-4 checkbox-group">
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="oil_problems[]" value="Oil level" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Oil Level</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="oil_problems[]" value="Change oil" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Change Oil (CO)</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="oil_problems[]" value="Oil filter" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Oil Filter</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Water -->
+                        <div id="water_container" class="border-2 border-gray-600 py-8 px-6 ml-8 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            <label class="block <?php echo mapMaintenanceStatusAndColor($service_data['water']); ?>">
+                                <span class="font-bold text-black">Water:</span>
+                                <span class="text-sm font-medium"><?php echo mapMaintenanceStatus($service_data['water']); ?></span>
+                            </label>
+                            <div class="flex flex-col items-start pt-4 checkbox-group">
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="water_problems[]" value="Colant level" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Coolant Level</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="water_problems[]" value="Radiator cap" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Radiator Cap</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="water_problems[]" value="Coolant radiator" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Coolant Radiator</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Brake -->
+                        <div id="brake_container" class="border-2 border-gray-600 py-8 px-6 ml-8 mt-8 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            <label class="block <?php echo mapMaintenanceStatusAndColor($service_data['brake']); ?>">
+                                <span class="font-bold text-black">Brake:</span>
+                                <span class="text-sm font-medium "><?php echo mapMaintenanceStatus($service_data['brake']); ?></span>
+                            </label>
+                            <div class="flex flex-col items-start pt-4 checkbox-group">
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="brake_problems[]" value="Brake fluid" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Brake Fluid (BF)</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="brake_problems[]" value="Brake pad" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Brake Pad</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="brake_problems[]" value="Break leaks" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Brake Leaks</span>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Air -->
+                        <div id="air_container" class="border-2 border-gray-600  py-8 px-6 ml-8 mt-8 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            <label class="block <?php echo mapMaintenanceStatusAndColor($service_data['air']); ?>">
+                                <span class="font-bold text-black">Air:</span>
+                                <span class="text-sm font-medium "><?php echo mapMaintenanceStatus($service_data['air']); ?></span>
+                            </label>
+                            <div class="flex flex-col items-start pt-4 checkbox-group">
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="air_problems[]" value="Air intake system" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Air Intake System</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="air_problems[]" value="HVAC system" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">HVAC System</span>
+                                </span>
+                                <span class="ml-6 flex items-center">
+                                    <input type="checkbox" name="air_problems[]" value="Temperature control" class="form-checkbox h-5 w-5 text-gray-600">
+                                    <span class="ml-4">Temperature Control</span>
+                                </span>
+                            </div>
+                        </div>
+
+                    <!-- Gas -->
+
+                    <div id="gas_container" class="border-2 border-gray-600 py-8 px-6 ml-8 mt-8 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                        <label class="block <?php echo mapMaintenanceStatusAndColor($service_data['gas']); ?>">
+                            <span class="font-bold text-black">Gas:</span>
+                            <span class="text-sm font-medium "><?php echo mapMaintenanceStatus($service_data['gas']); ?></span>
+                        </label>
+                        <div class="flex flex-col items-start pt-4 checkbox-group">
+                            <span class="ml-6 flex items-center">
+                                <input type="checkbox" name="gas_problems[]" value="Fuel system" class="form-checkbox h-5 w-5 text-gray-600">
+                                <span class="ml-4">Fuel System</span>
+                            </span>
+                            <span class="ml-6 flex items-center">
+                                <input type="checkbox" name="gas_problems[]" value="Fuel injector" class="form-checkbox h-5 w-5 text-gray-600">
+                                <span class="ml-4">Fuel Injector (FI)</span>
+                            </span>
+                            <span class="ml-6 flex items-center">
+                                <input type="checkbox" name="gas_problems[]" value="Engine light" class="form-checkbox h-5 w-5 text-gray-600">
+                                <span class="ml-4">Engine Light</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Tire -->
+
+                    <div id="tire_container" class="border-2 border-gray-600  py-8 px-6 ml-8 mt-8 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                        <label class="block <?php echo mapMaintenanceStatusAndColor($service_data['tire']); ?>">
+                            <span class="font-bold text-black">Tire:</span>
+                            <span class="text-sm font-medium "><?php echo mapMaintenanceStatus($service_data['tire']); ?></span>
+                        </label>
+                        <div class="flex flex-col items-start pt-4 checkbox-group">
+                            <span class="ml-6 flex items-center">
+                                <input type="checkbox" name="tire_problems[]" value="Tire pressure" class="form-checkbox h-5 w-5 text-gray-600">
+                                <span class="ml-4">Tire Pressure</span>
+                            </span>
+                            <span class="ml-6 flex items-center">
+                                <input type="checkbox" name="tire_problems[]" value="Wheel alignment" class="form-checkbox h-5 w-5 text-gray-600">
+                                <span class="ml-4">Wheel Alignment</span>
+                            </span>
+                            <span class="ml-6 flex items-center">
+                                <input type="checkbox" name="tire_problems[]" value="Tire repair" class="form-checkbox h-5 w-5 text-gray-600">
+                                <span class="ml-4">Tire Repair</span>
+                            </span>
+                        </div>
+                    </div>
+
         </div>
 
-            <div id="elp_container" class="bg-white p-4 rounded-md shadow-md">
-                <label class="block text-sm font-medium text-gray-600"><span class="font-bold text=[#000000]">Engine Low Power:</span>
-                    <span id="elp_status" class="ml-2 text-red-500"><?php echo ($service_data['elp'] == 2) ? 'Urgent Need' : ''; ?></span>
-                    <input type="checkbox" name="engine_low_power_problems[]" value="Mass air flow" class="mr-2">
-                    <span>Mass Air Flow (MAF)</span>
-                    <input type="checkbox" name="engine_low_power_problems[]" value="Throttle body" class="mr-2">
-                    <span>Throttle Body</span>
-                    <input type="checkbox" name="engine_low_power_problems[]" value="Fuel system" class="mr-2">
-                    <span>Fuel System</span>
-                </label>
-            </div>
+        <br>
+        <hr style="border-color: black;">
+        <br>
 
-            <div id="ep_container" class="bg-white p-4 rounded-md shadow-md">
-                <label class="block text-sm font-medium text-gray-600"><span class="font-bold text=[#000000">Electrical Problem:</span>
-                    <span id="ep_status" class="ml-2 text-red-500"><?php echo ($service_data['ep'] == 3) ? 'Urgent Need' : ''; ?></span>
-                    <input type="checkbox" name="electrical_problems[]" value="Spark plugs" class="mr-2">
-                    <span>Spark Plugs</span>
-                    <input type="checkbox" name="electrical_problems[]" value="Ignition system" class="mr-2">
-                    <span>Ignition System</span>
-                    <input type="checkbox" name="electrical_problems[]" value="Electronic module" class="mr-2">
-                    <span>Electronic Module</span>
-                </label>
-            </div>  
-
-
-
-           
-        <div class="maintenance-container">
-           
-                <!-- Maintenance Section -->
-                <h2 class="text-xl font-bold mb-4">Maintenance</h2>
-
-                <!-- Battery -->
-                <div class="mb-4">
-                <label class="block text-sm font-medium <?php echo mapMaintenanceStatusAndColor($service_data['battery']); ?>"><span class="text-black font-bold">Battery:</span>
-                    <?php echo mapMaintenanceStatus($service_data['battery']); ?>
-                </label>
-                    <div class="checkbox-group">
-                        <input type="checkbox" name="battery_problems[]" value="Battery voltage" class="mr-2">
-                        <span>Battery Voltage</span>
-
-                        <input type="checkbox" name="battery_problems[]" value="Battery terminals" class="mr-2">
-                        <span>Battery Terminals</span>
-
-                        <input type="checkbox" name="battery_problems[]" value="Load test" class="mr-2">
-                        <span>Load Test</span>
-                    </div>
-                </div>
-
-                <!-- Light -->
-                <div class="mb-4">
-                <label class="block text-sm font-medium <?php echo mapMaintenanceStatusAndColor($service_data['light']); ?>"><span class="text-black font-bold">Light:</span>
-                    <?php echo mapMaintenanceStatus($service_data['light']); ?>
-                </label>
-                    <div class="checkbox-group">
-                        <input type="checkbox" name="light_problems[]" value="Check bulbs" class="mr-2">
-                        <span>Check Bulbs</span>
-
-                        <input type="checkbox" name="light_problems[]" value="Inspect fuses" class="mr-2">
-                        <span>Inspect Fuses</span>
-
-                        <input type="checkbox" name="light_problems[]" value="Check wirings" class="mr-2">
-                        <span>Check Wirings</span>
-                    </div>
-                </div>
-
-                <!-- Oil -->
-                <div class="mb-4">
-                <label class="block text-sm font-medium <?php echo mapMaintenanceStatusAndColor($service_data['oil']); ?>"><span class="text-black font-bold">Oil:</span>
-                    <?php echo mapMaintenanceStatus($service_data['oil']); ?>
-                </label>
-                    <div class="checkbox-group">
-                        <input type="checkbox" name="oil_problems[]" value="Oil level" class="mr-2">
-                        <span>Oil Level</span>
-
-                        <input type="checkbox" name="oil_problems[]" value="Change oil" class="mr-2">
-                        <span>Change Oil</span>
-
-                        <input type="checkbox" name="oil_problems[]" value="Oil filter" class="mr-2">
-                        <span>Oil Filter</span>
-                    </div>
-                </div>
-
-                <!-- Water -->
-                <div class="mb-4">
-                <label class="block text-sm font-medium <?php echo mapMaintenanceStatusAndColor($service_data['water']); ?>"><span class="text-black font-bold">Water:</span>
-                    <?php echo mapMaintenanceStatus($service_data['water']); ?>
-                </label>
-                    <div class="checkbox-group">
-                        <input type="checkbox" name="water_problems[]" value="Colant level" class="mr-2">
-                        <span>Colant Level</span>
-
-                        <input type="checkbox" name="water_problems[]" value="Radiator cap" class="mr-2">
-                        <span>Radiator Cap</span>
-
-                        <input type="checkbox" name="water_problems[]" value="Coolant radiator" class="mr-2">
-                        <span>Colant Radiator</span>
-                    </div>
-                </div>
-
-                <!-- Brake -->
-                <div class="mb-4">
-                <label class="block text-sm font-medium <?php echo mapMaintenanceStatusAndColor($service_data['brake']); ?>"><span class="text-black font-bold">Brake:</span>
-                    <?php echo mapMaintenanceStatus($service_data['brake']); ?>
-                </label>
-                    <div class="checkbox-group">
-                        <input type="checkbox" name="brake_problems[]" value="Brake fluid" class="mr-2">
-                        <span>Brake Fluid</span>
-
-                        <input type="checkbox" name="brake_problems[]" value="Brake pad" class="mr-2">
-                        <span>Brake Pad</span>
-
-                        <input type="checkbox" name="brake_problems[]" value="Break leaks" class="mr-2">
-                        <span>Brake Leaks</span>
-                    </div>
-                </div>
-
-                <!-- Air -->
-                <div class="mb-4">
-                <label class="block text-sm font-medium <?php echo mapMaintenanceStatusAndColor($service_data['air']); ?>"><span class="text-black font-bold">Air:</span>
-                    <?php echo mapMaintenanceStatus($service_data['air']); ?>
-                </label>
-                    <div class="checkbox-group">
-                        <input type="checkbox" name="air_problems[]" value="Air intake system" class="mr-2">
-                        <span>Air Intake System</span>
-
-                        <input type="checkbox" name="air_problems[]" value="HVAC system" class="mr-2">
-                        <span>HVAC System</span>
-
-                        <input type="checkbox" name="air_problems[]" value="Temperature control" class="mr-2">
-                        <span>Temperature Control</span>
-                    </div>
-                </div>
-
-                <!-- Gas -->
-                <div class="mb-4">
-                <label class="block text-sm font-medium <?php echo mapMaintenanceStatusAndColor($service_data['gas']); ?>"><span class="text-black font-bold">Gas:</span>
-                    <?php echo mapMaintenanceStatus($service_data['gas']); ?>
-                </label>
-                    <div class="checkbox-group">
-                        <input type="checkbox" name="gas_problems[]" value="Fuel system" class="mr-2">
-                        <span>Fuel System</span>
-
-                        <input type="checkbox" name="gas_problems[]" value="Fuel injector" class="mr-2">
-                        <span>Fuel Injector</span>
-
-                        <input type="checkbox" name="gas_problems[]" value="Engine light" class="mr-2">
-                        <span>Engine Light</span>
-                    </div>
-                </div>
-
-                <!-- Tire -->
-                <div class="mb-4">
-                <label class="block text-sm font-medium <?php echo mapMaintenanceStatusAndColor($service_data['tire']); ?>"><span class="text-black font-bold">Tire:</span>
-                    <?php echo mapMaintenanceStatus($service_data['tire']); ?>
-                </label>
-                    <div class="checkbox-group">
-                        <input type="checkbox" name="tire_problems[]" value="Tire pressure" class="mr-2">
-                        <span>Tire Pressure</span>
-
-                        <input type="checkbox" name="tire_problems[]" value="Wheel alignment" class="mr-2">
-                        <span>Wheel Alignment</span>
-
-                        <input type="checkbox" name="tire_problems[]" value="Tire repair" class="mr-2">
-                        <span>Tire Repair</span>
-                    </div>
-                </div>
-
-
-            </div>
 
             <!-- Hidden input fields for car_id and user_id -->
             <input type="hidden" name="car_id" value="<?php echo $car_id; ?>">
@@ -362,13 +437,16 @@ if(mysqli_num_rows($select) > 0){
                 class="mt-4 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">
                 Submit
             </button>
+            <br>
+            <br>
+            <br>
+            <br>
         </form>
     </div>
 </div>
 
 <!-- Include Bootstrap JS and custom scripts here -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
     crossorigin="anonymous"></script>
     <script>
     // Function to hide/show container based on Urgent Need status
