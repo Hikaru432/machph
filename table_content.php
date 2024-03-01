@@ -33,7 +33,7 @@ if (!$car_select) {
                             <td>
                                 <?php
                                 if ($row['validation_status'] === 'invalid') {
-                                    echo '<a href="#" class="invalid-comment-link" data-comment="' . $row['comment'] . '" data-bs-toggle="modal" data-bs-target="#invalidModal">Invalid</a>';
+                                    echo '<a href="#" class="invalid-comment-link" data-comment="' . $row['comment'] . '">Invalid</a>';
                                 } elseif ($row['validation_status'] === 'valid') {
                                     echo 'Valid';
                                 } else {
@@ -46,22 +46,4 @@ if (!$car_select) {
                     <?php endwhile; ?>
                 </tbody>
             </table>
-            <!-- Modal -->
-                <div class="modal fade" id="invalidModal" tabindex="-1" aria-labelledby="invalidModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="invalidModalLabel">Invalid Comment</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <p id="invalidComment"></p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
         </div>

@@ -19,7 +19,8 @@ if (!$result) {
         <tr>
             <th>Name</th>
             <th>Car Model</th>
-            <th>Mechanic approval</th>
+            <th>Mechanic Approval</th>
+            <th>Assign Mechanic</th>
             <th>Checking</th>
         </tr>
         </thead>
@@ -41,6 +42,32 @@ if (!$result) {
                         echo 'Not Set';
                     }
                     ?>
+                </td>
+                <td>
+                    <form action="assign_mechanic.php" method="post">
+                        <input type="hidden" name="user_id" value="<?php echo $row['user_id']; ?>">
+                        <input type="hidden" name="car_id" value="<?php echo $row['car_id']; ?>">
+                        <select name="mechanic_id" class="form-select">
+                            <?php
+                            // Fetch available mechanics from the mechanic table with their corresponding names from the user table
+                            $mechanic_query = "SELECT mechanic.mechanic_id, mechanic.jobrole, user.name 
+                                                FROM mechanic 
+                                                JOIN user ON mechanic.user_id = user.id";
+                            $mechanic_result = mysqli_query($conn, $mechanic_query);
+                            if ($mechanic_result && mysqli_num_rows($mechanic_result) > 0) {
+                                while ($mechanic_row = mysqli_fetch_assoc($mechanic_result)) {
+                                    echo "<option value=\"{$mechanic_row['mechanic_id']}\">{$mechanic_row['jobrole']} - {$mechanic_row['name']}</option>";
+                                }
+                            } else {
+                                echo "<option value=\"\">No mechanics available</option>";
+                            }
+                            ?>
+                            <button type="submit" class="btn btn-primary">Assign Mechanic</button>
+                        </select>
+
+
+                        <button type="submit" class="btn btn-primary">Assign Mechanic</button>
+                    </form>
                 </td>
                 <td>
                     <a href="machvalidate.php?user_id=<?php echo $row['user_id']; ?>&car_id=<?php echo $row['car_id']; ?>" class="btn btn-primary">Validate</a>

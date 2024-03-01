@@ -75,32 +75,8 @@ if (!$result) {
 
         loadTableContent();
 
-        setInterval(loadTableContent, 1000);
-
-        setInterval(function() {
-            $.get('check_for_new_rows_manager.php', function(data) {
-                $('#notification-badge').text(data);
-            });
-        }, 1000);
-    });
-
-    $(document).ready(function() {
-        function loadTableContent() {
-            $.get('table_content_manager.php', function(data) {
-                $('#table-content-placeholder').html(data);
-            });
-        }
-
-        loadTableContent();
-
-        setInterval(loadTableContent, 1000);
-
-        setInterval(function() {
-            $.get('check_for_new_rows_manager.php', function(data) {
-                $('#notification-badge').text(data);
-            });
-        }, 5000);
     });
 </script>
+
 </body>
 </html>
