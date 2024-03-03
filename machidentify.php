@@ -82,31 +82,35 @@ if(mysqli_num_rows($select) > 0){
 <body class="bg-gray-100">
 
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Mechanic</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="homemechanic.php">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="repair_table_content.php">Job</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Notifications<span id="notification-badge" class="badge bg-danger">0</span></a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-            </div>
+<nav class="navbar navbar-expand-lg bg-black">
+    <div class="container-fluid">
+        <a class="navbar-brand text-white" href="#">Mechanic</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon text-white"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active text-white" aria-current="page" href="homemechanic.php">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active text-white" aria-current="page" href="#">Notifications<span id="notification-badge" class="badge bg-danger"></span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item text-white" href="#">Action</a></li>
+                        <li><a class="dropdown-item text-white" href="#">Another action</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-white" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
 
 
@@ -124,10 +128,10 @@ if(mysqli_num_rows($select) > 0){
                 }
             ?>
         </li>
-        <li class="px-4"><p class="mb-2 font-medium">User Name: <?php echo '<span class="font-normal">'. $user_data['name'] . '</span>'; ?></p></li>
-        <li class="px-4"><p class="mb-2 font-medium">Manufacturer: <?php echo '<span class="font-normal">'. $car_data['manufacturer'] . '</span>'; ?></p></li>
-        <li class="px-4"><p class="mb-2 font-medium">Car Model: <?php echo '<span class="font-normal">'. $car_data['carmodel'] . '</span>'; ?></p></li>
-        <li class="px-4"><p class="mb-2 font-medium">Plate #:  <?php echo '<span class="font-normal">'. $car_data['plateno'] . '</span>'; ?></p></li>
+        <li class="px-4"><p class="mb-2 font-medium"><strong>User Name</strong>: <?php echo '<span class="font-normal">'. $user_data['name'] . '</span>'; ?></p></li>
+        <li class="px-4"><p class="mb-2 font-medium"><strong>Manufacturer</strong>: <?php echo '<span class="font-normal">'. $car_data['manufacturer'] . '</span>'; ?></p></li>
+        <li class="px-4"><p class="mb-2 font-medium"><strong>Car Model</strong>: <?php echo '<span class="font-normal">'. $car_data['carmodel'] . '</span>'; ?></p></li>
+        <li class="px-4"><p class="mb-2 font-medium"><strong>Plate #</strong>:  <?php echo '<span class="font-normal">'. $car_data['plateno'] . '</span>'; ?></p></li>
     </ul>
 
     <!-- Car details -->

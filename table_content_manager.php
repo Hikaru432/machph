@@ -129,7 +129,7 @@ if (!$result) {
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title"><?php echo $mechanic_row['name']; ?></h5>
-                            <p class="card-text">Availability: Available</p>
+                            <p class="card-text"><strong>Availability</strong>: Available</p>
                         </div>
                     </div>
                 </div>
@@ -161,7 +161,7 @@ if (!$result) {
                             <?php
                             // Check if mechanic has progress data
                             if ($progress_row['avg_progress'] !== null) {
-                                echo "<p class='card-text'>Availability: {$progress_row['avg_progress']}%</p>";
+                                echo "<p class='card-text'><strong>Availability</strong>: {$progress_row['avg_progress']}%</p>";
                             } else {
                                 echo "<p class='card-text'>Availability: Available</p>";
                             }

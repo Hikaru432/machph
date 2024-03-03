@@ -75,6 +75,8 @@ if (!$result) {
     </div>
 </nav>
 
+<h3 style="margin: 20px;">Job Available</h3>
+
 <!-- The table -->
 <div class="row" style="margin-top: 100px; padding: 0 15px 0 15px;">
     <?php while ($row = mysqli_fetch_assoc($result)) { ?>

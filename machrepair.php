@@ -88,9 +88,35 @@
     </head>
     <body>
 
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <!-- Navbar content here -->
-    </nav>
+    <nav class="navbar navbar-expand-lg bg-black">
+    <div class="container-fluid">
+        <a class="navbar-brand text-white" href="#">Mechanic</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon text-white"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active text-white" aria-current="page" href="homemechanic.php">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active text-white" aria-current="page" href="#">Notifications<span id="notification-badge" class="badge bg-danger"></span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item text-white" href="#">Action</a></li>
+                        <li><a class="dropdown-item text-white" href="#">Another action</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-white" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
     <div class="container mx-auto mt-5">
         <!-- User and Car Information -->
@@ -265,7 +291,7 @@
     <!-- Your existing HTML code -->
       
     <ul style="display: flex; justify-content: justify-between;  align-items: center; ">
-        <li style="margin-top: 48px; margin-left: -15px;">Progress:</li>
+        <li style="margin-top: 48px; margin-left: -15px;"><strong>Progress</strong>:</li>
         <li  class="progress mt-5" style="width: 50%; margin-left: 15px;">
            <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
         </li>
