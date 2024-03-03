@@ -4,13 +4,17 @@ include 'config.php';
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header('location:login.php');
+    header('Location: login.php');
     exit();
 }
 
-// Retrieve Repair data for the specified user and car
-$user_id = $_GET['user_id']; // Make sure to validate and sanitize user inputs
-$car_id = $_GET['car_id'];   // Make sure to validate and sanitize user inputs
+// Validate and sanitize user inputs for user_id and car_id
+$user_id = isset($_GET['user_id']) ? filter_var($_GET['user_id'], FILTER_SANITIZE_NUMBER_INT) : null;
+$car_id = isset($_GET['car_id']) ? filter_var($_GET['car_id'], FILTER_SANITIZE_NUMBER_INT) : null;
+
+if (!$user_id || !$car_id) {
+    die('Invalid user ID or car ID.');
+}
 
 $repair_data = array();  // Associative array to store diagnoses for different problems
 
@@ -34,11 +38,14 @@ function fetchDataForProblem($conn, $user_id, $car_id, $problem)
 
 // Function to fetch approval reason from approvals table
 function getApprovalReason($conn, $user_id, $car_id) {
-    $approval_query = "SELECT reason FROM approvals WHERE user_id = '$user_id' AND car_id = '$car_id'";
-    $approval_result = mysqli_query($conn, $approval_query);
+    $approval_query = "SELECT reason FROM approvals WHERE user_id = ? AND car_id = ?";
+    $stmt = mysqli_prepare($conn, $approval_query);
+    mysqli_stmt_bind_param($stmt, 'ii', $user_id, $car_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-    if ($approval_result) {
-        $approval_info = mysqli_fetch_assoc($approval_result);
+    if ($result && mysqli_num_rows($result) > 0) {
+        $approval_info = mysqli_fetch_assoc($result);
         return $approval_info['reason'];
     } else {
         return 'Error fetching reason: ' . mysqli_error($conn);
@@ -63,8 +70,11 @@ $tire_data = fetchDataForProblem($conn, $user_id, $car_id, 'Tire');
 // Fetch user and car information
 $user_car_query = "SELECT user.name, user.image, car.carmodel, car.plateno FROM user
                     JOIN car ON user.id = car.user_id
-                    WHERE user.id = '$user_id' AND car.car_id = '$car_id'";
-$user_car_result = mysqli_query($conn, $user_car_query);
+                    WHERE user.id = ? AND car.car_id = ?";
+$stmt = mysqli_prepare($conn, $user_car_query);
+mysqli_stmt_bind_param($stmt, 'ii', $user_id, $car_id);
+mysqli_stmt_execute($stmt);
+$user_car_result = mysqli_stmt_get_result($stmt);
 
 if ($user_car_result && mysqli_num_rows($user_car_result) > 0) {
     $user_car_info = mysqli_fetch_assoc($user_car_result);
@@ -168,8 +178,6 @@ if ($user_car_result && mysqli_num_rows($user_car_result) > 0) {
         <?php } ?>
     </div>
 </div>
-
-
 
     <!-- Maintenance part -->
     <div class="for-maintenance-container bg-white p-4 mt-4 rounded-md shadow-md">
@@ -283,56 +291,66 @@ if ($user_car_result && mysqli_num_rows($user_car_result) > 0) {
    }
 
    document.getElementById('validBtn').addEventListener('click', function () {
-      updateValidation('valid');
-   });
+    updateValidation('valid');
+});
 
-   document.getElementById('invalidBtn').addEventListener('click', function () {
-      // Show the modal
-      showModal('Please enter your comment for invalidation.');
-      // Focus on the comment textarea
-      document.getElementById('comment').focus();
-   });
+document.getElementById('invalidBtn').addEventListener('click', function () {
+    // Show the modal
+    showModal('Please enter your comment for invalidation.');
+    // Focus on the comment textarea
+    document.getElementById('comment').focus();
+});
 
-   document.getElementById('saveChangesBtn').addEventListener('click', function () {
-      const comment = document.getElementById('comment').value;
-      if (comment !== '') {
-         updateValidation('invalid', comment);
-      }
-   });
+document.getElementById('saveChangesBtn').addEventListener('click', function () {
+    const comment = document.getElementById('comment').value;
+    if (comment !== '') {
+        updateValidation('invalid', comment);
+    } else {
+        // If comment is empty, show an alert
+        showAlert('Please enter a comment for invalidation.');
+    }
+});
 
-   function updateValidation(status, comment = null) {
-      const user_id = <?php echo $user_id; ?>;
-      const car_id = <?php echo $car_id; ?>;
+function updateValidation(status, comment = null) {
+    const user_id = <?php echo $user_id; ?>;
+    const car_id = <?php echo $car_id; ?>;
 
-      // Use AJAX to update validation status
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', 'update_validation.php', true);
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      xhr.onreadystatechange = function () {
-         if (xhr.readyState === 4 && xhr.status === 200) {
+    // Use AJAX to update validation status
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'update_validation.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
             // Close the modal
             var myModal = new bootstrap.Modal(document.getElementById('validationModal'));
             myModal.hide();
-            // Display a success message
-            showAlert('Validation status updated successfully.');
-            // Redirect to homemanager.php after a short delay (optional)
-            setTimeout(function () {
-               window.location.href = 'homemanager.php';
-            }, 2000); // 2000 milliseconds = 2 seconds
-         }
-      };
+            // Display a success message if status is valid
+            if (status === 'valid') {
+                showAlert('Validation status updated successfully.');
+            } else {
+                // Display a success message for invalid status
+                showAlert('Validation status updated successfully.');
+                // Redirect to homemanager.php after a short delay for invalid status
+                setTimeout(function () {
+                    window.location.href = 'homemanager.php';
+                }, 1000); // 1000 milliseconds = 1 second
+            }
+        }
+    };
 
-      const data = 'user_id=' + user_id + '&car_id=' + car_id + '&status=' + status + '&comment=' + comment;
-      xhr.send(data);
-   }
+    const data = 'user_id=' + user_id + '&car_id=' + car_id + '&status=' + status + '&comment=' + comment;
+    xhr.send(data);
+}
 
-   function showAlert(message) {
-      // Set the validation message in the modal body
-      document.getElementById('validationMessage').innerText = message;
-      // Open the modal
-      var myModal = new bootstrap.Modal(document.getElementById('validationModal'));
-      myModal.show();
-   }
+function showAlert(message) {
+    alert(message);
+}
+
+function showModal(message) {
+    document.getElementById('validationMessage').innerText = message;
+    var myModal = new bootstrap.Modal(document.getElementById('validationModal'));
+    myModal.show();
+}
 </script>
 
 </body>
