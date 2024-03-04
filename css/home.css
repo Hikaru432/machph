@@ -14,7 +14,7 @@
 } */
 
 .upper-nav-container {
-    position: absolute;
+    position: fixed;
     background-color: rgb(0, 0, 0);
     bottom: 660px;
     left: 65px;

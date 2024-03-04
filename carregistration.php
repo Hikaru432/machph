@@ -162,9 +162,10 @@ if (!$car_model_query) {
             }
             ?>
         </select>
-        <div class="flex justify-between items-center">
-            <p class="text-xs" style="font-size: 12px;">Add another manufacturer: </p>
-            <button class="bg-gray-300 w-[200px] mt-4 p-1" style="border-radius: 5px; font-size: 5px;" type="button" id="addManufacturerBtn" class="btn">Add</button>
+        <div class="flex justify-between items-center" style="margin-left: 220px;">
+            <span class="font-bold" style="font-size: 12px; margin-right: 5px; margin-top: 8px;">Manufacturer & Car model</span>
+            <button class="bg-gray-300 w-12 h-6 mt-2 " style="border-radius: 5px; font-size: 15px;" type="button" id="addManufacturerBtn" class="btn">
+                Add</button>
         </div>
         <select name="carmodel" placeholder="Enter car model" class="box" id="carmodel">
             <option>select car model</option>
@@ -217,35 +218,7 @@ if (!$car_model_query) {
 
     <!-- For the sectioning -->
 
-    <section class="cars-container">
-        <div class="container">
-            <h2>Cars Registered by You</h2>
-            <?php if (isset($car_select) && mysqli_num_rows($car_select) > 0) : ?>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Car Name</th>
-                            <th>Plate No</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        // Check if there are rows to fetch
-                        while ($row = mysqli_fetch_assoc($car_select)) :
-                        ?>
-                            <tr>
-                                <td><?php echo isset($row['manufacturer_name']) ? $row['manufacturer_name'] : ''; ?></td>
-                                <td><?php echo isset($row['plateno']) ? $row['plateno'] : ''; ?></td>
-                                <td><a href="carprofile.php?car_id=<?php echo $row['car_id']; ?>">View Profile</a></td>
-                            </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
-            <?php endif; ?>
-        </div>
-    </section>
-
+    
 
     <!-- ... (your existing script section) ... -->
 

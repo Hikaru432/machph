@@ -42,7 +42,7 @@ if (!$result) {
                     <a class="nav-link active text-white" aria-current="page" href="homemechanic.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active text-white" aria-current="page" href="#">Notifications<span id="notification-badge" class="badge bg-danger"></span></a>
+                    <a class="nav-link active text-white" aria-current="page" href="#">Notifications<span id="notification-badge" class="badge bg-danger">0</span></a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -67,16 +67,51 @@ if (!$result) {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     $(document).ready(function() {
-        function loadTableContent() {
-            $.get('table_content_manager.php', function(data) {
-                $('#table-content-placeholder').html(data);
-            });
-        }
+    function loadTableContent() {
+        $.get('table_content_manager.php', function(data) {
+            $('#table-content-placeholder').html(data);
+        }).fail(function() {
+            console.log('Failed to load table content');
+        });
+    }
 
-        loadTableContent();
+    loadTableContent();
 
+    function reloadTable() {
+        $.get('table_content_manager.php', function(data) {
+            var oldRowCount = $('#carTable tbody tr').length;
+            $('#table-content-placeholder').html(data);
+            var newRowCount = $('#carTable tbody tr').length;
+            var newRowsCount = newRowCount - oldRowCount;
+            if (newRowsCount > 0) {
+                $('#notification-badge').text(newRowsCount);
+                // Highlight new rows
+                var newRows = $('#carTable tbody tr:lt(' + newRowsCount + ')');
+                newRows.addClass('highlighted');
+                setTimeout(function(){
+                    newRows.removeClass('highlighted');
+                }, 5000); // Highlight remains for 5 seconds (5000 milliseconds)
+            }
+        }).fail(function() {
+            console.log('Failed to load table content');
+        });
+    }
+
+    setInterval(reloadTable, 10000);
+
+    // Notification badge click event
+    $('#notification-badge').click(function() {
+        // Clear notification badge
+        $('#notification-badge').text('0');
     });
+});
 </script>
+<style>
+    .highlighted {
+        background-color: black;
+    }
+
+</style>
 
 </body>
 </html>

@@ -35,6 +35,7 @@ if(mysqli_num_rows($select) > 0){
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
    <title>Profile</title>
    <link rel="stylesheet" href="css/nav.css">
    <link rel="stylesheet" href="css/profile.css">
@@ -42,6 +43,13 @@ if(mysqli_num_rows($select) > 0){
 
 </head>
 <body>
+        <!-- Upper nav -->
+    <nav class="fixed w-full h-20 bg-black flex justify-between items-center px-4 text-gray-100 font-medium">
+        <ul>
+           <li></li>
+           <li></li>
+        </ul>
+    </nav>
    <div class="container-navbar-home">
    <div class="wrapper">
         <aside id="sidebar">
@@ -158,27 +166,6 @@ if(mysqli_num_rows($select) > 0){
             <div class="fullname-container-h43"> <h4>Zip code:<p class="profile-box3-3"><?php echo $fetch['zipcode']; ?></p></h4> </div>
       </div>
 </div>
-
-   <!-- Upper nav -->
-
-   <div class="nav-container">
-        <div class="upper-nav-container">
-                <div class="img-icon-upper-nav">
-                    <li><img class="upper-nav-icon-three" src="img/facebook.png" alt="facebook"></li>
-                    <li><img class="upper-nav-icon-three" src="img/instagram.png" alt="instagram"></li>
-                    <li><img class="upper-nav-icon-three-chrome"src="img/chrome.png" alt="chrome"></li>
-                </div>
-        
-            <div class="upper-nav-icons-info">
-                <li><img src="img/gmail.png" alt=""><span>hikaru@gmail.com</span></li>
-                <li><img src="img/call.png" alt=""><span>0948-501-1228</span></li> 
-            </div>
-
-            <div class="upper-nav-button">
-                <a href="">Appointment</a>
-            </div>
-        </div>
-    </div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
