@@ -190,7 +190,7 @@ if(mysqli_num_rows($select) > 0){
                     <!-- Electrical problem -->
                     <div id="ep_container" class="border-2 border-gray-600 p-3 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
                         <label class="block">
-                            <span class="font-bold text-">Engine Overhaul</span>
+                            <span class="font-bold text-">Electrical Problem</span>
                             <span id="eo_status" class="ml-9 text-red-500"><?php echo ($service_data['ep'] == 3) ? 'Urgent Need' : ''; ?></span>
                             <div class="flex flex-col items-start pt-4 checkbox-group">
                                 <span class="ml-6 flex items-center">

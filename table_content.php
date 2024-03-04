@@ -29,7 +29,6 @@ if (!$car_select) {
 ?>
 
 <div class="container">
-    <h2>Car user</h2>
     <table id="carTable" class="table">
         <thead>
             <tr>
@@ -57,7 +56,7 @@ if (!$car_select) {
                         }
                         ?>
                     </td>
-                    <td><button class="btn btn-primary view-profile">View Profile</button></td>
+                   <td><a href="machidentify.php?user_id=<?php echo (int)$row['user_id']; ?>&car_id=<?php echo (int)$row['car_id']; ?>" class="btn btn-primary">View Profile</a></td>
                 </tr>
             <?php endwhile; ?>
         </tbody>
