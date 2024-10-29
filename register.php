@@ -93,7 +93,7 @@ if (isset($_POST['submit'])) {
             <input type="text" name="middlename" placeholder="Enter middle name" class="box" required>
             <input type="text" name="lastname" placeholder="Enter last name" class="box" required>
             <input type="submit" name="submit" value="register now" class="btn">
-            <p>already have an account? <a href="login.php">login now</a></p>
+            <p>already have an account? <a href="index.php">login now</a></p>
        </div>
    </form>
 </div>
