@@ -18,6 +18,7 @@ if (isset($_POST['submit'])) {
     $pass = mysqli_real_escape_string($conn, md5($_POST['password']));
     $cpass = mysqli_real_escape_string($conn, md5($_POST['cpassword']));
     $role = 'user';
+    $companyid = NULL; // Set companyid to NULL if it's not provided
 
     // Image handling
     $image = $_FILES['image']['tmp_name'];
@@ -25,7 +26,7 @@ if (isset($_POST['submit'])) {
     $image_size = $_FILES['image']['size'];
 
     // Check if the user already exists
-    $select = mysqli_query($conn, "SELECT * FROM user WHERE email = '$email'") or die('query failed');
+    $select = mysqli_query($conn, "SELECT * FROM user WHERE email = '$email'") or die('Error: ' . mysqli_error($conn));
 
     if (mysqli_num_rows($select) > 0) {
         $message[] = 'User already exists';
@@ -37,8 +38,8 @@ if (isset($_POST['submit'])) {
             $message[] = 'Image size is too large!';
         } else {
             // Insert user details into the database with image as binary data
-            $stmt = mysqli_prepare($conn, "INSERT INTO user (name, email, password, image, firstname, middlename, lastname, homeaddress, barangay, province, municipality, zipcode, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            mysqli_stmt_bind_param($stmt, "sssssssssssss", $name, $email, $pass, $image_data, $firstname, $middlename, $lastname, $homeaddress, $barangay, $province, $municipality, $zipcode, $role);
+            $stmt = mysqli_prepare($conn, "INSERT INTO user (name, email, password, image, firstname, middlename, lastname, homeaddress, barangay, province, municipality, zipcode, role, companyid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            mysqli_stmt_bind_param($stmt, "ssssssssssssss", $name, $email, $pass, $image_data, $firstname, $middlename, $lastname, $homeaddress, $barangay, $province, $municipality, $zipcode, $role, $companyid);
             if (mysqli_stmt_execute($stmt)) {
                 $message[] = 'Registered successfully!';
                 header('location:index.php');
@@ -50,7 +51,6 @@ if (isset($_POST['submit'])) {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">

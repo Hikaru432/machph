@@ -2,21 +2,23 @@
 session_start();
 include 'config.php';
 
-// Fetch user details from the database
-$user_id = $_SESSION['user_id'];
+// Sanitize user ID
+$user_id = intval($_SESSION['user_id']);
 $user_query = "SELECT * FROM user WHERE id = $user_id";
 $user_result = mysqli_query($conn, $user_query);
 $user_row = mysqli_fetch_assoc($user_result);
 
-// Fetch products from the database based on the cart
+// Fetch all products in the cart at once
 $cart = $_SESSION['cart'];
+$product_ids = implode(',', array_map('intval', array_keys($cart)));
+$product_query = "SELECT * FROM products WHERE id IN ($product_ids)";
+$product_result = mysqli_query($conn, $product_query);
 $products = [];
 $totalPrice = 0;
 
-foreach ($cart as $product_id => $quantity) {
-    $product_query = "SELECT * FROM products WHERE id = $product_id";
-    $product_result = mysqli_query($conn, $product_query);
-    $product_row = mysqli_fetch_assoc($product_result);
+while ($product_row = mysqli_fetch_assoc($product_result)) {
+    $product_id = $product_row['id'];
+    $quantity = $cart[$product_id];
     $product_row['quantity'] = $quantity;
     $totalPrice += ($product_row['selling_price'] * $quantity);
     $products[] = $product_row;
@@ -24,89 +26,74 @@ foreach ($cart as $product_id => $quantity) {
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve form data
-    $payment_method = $_POST['payment_method']; // Assuming radio button values are 'cash', 'gcash', 'paypal'
+    $payment_method = mysqli_real_escape_string($conn, $_POST['payment_method']);
 
-    // Insert order details into the database
+    // Insert order details
     $insert_order_query = "INSERT INTO salesreport (user_id, payment_method, total_price) VALUES ('$user_id', '$payment_method', '$totalPrice')";
     $insert_order_result = mysqli_query($conn, $insert_order_query);
 
     if ($insert_order_result) {
-        $order_id = mysqli_insert_id($conn); // Get the ID of the inserted order
+        $order_id = mysqli_insert_id($conn);
+        $currentDate = date('Y-m-d');
 
-        // Handle image upload and optional details based on payment method
-        if ($payment_method == 'gcash' && isset($_FILES['paymentImage']) && $_FILES['paymentImage']['error'] === UPLOAD_ERR_OK) {
+        // Image upload for GCash payment
+        if ($payment_method === 'gcash' && isset($_FILES['paymentImage']) && $_FILES['paymentImage']['error'] === UPLOAD_ERR_OK) {
             $upload_dir = 'uploaded_img';
-            $filename = $_FILES['paymentImage']['name'];
-            $tmp_name = $_FILES['paymentImage']['tmp_name'];
-            move_uploaded_file($tmp_name, $upload_dir . '/' . $filename);
+            $filename = basename($_FILES['paymentImage']['name']);
+            $target_file = $upload_dir . '/' . $filename;
+            move_uploaded_file($_FILES['paymentImage']['tmp_name'], $target_file);
 
-            // Update the order record with the filename
+            // Update order with the filename
             $update_order_query = "UPDATE salesreport SET paymentimg = '$filename' WHERE id = $order_id";
             mysqli_query($conn, $update_order_query);
         }
-        
-        $currentDate = date('Y-m-d'); // Get current dateorders 
+
+        // Insert order items
+        $stmt = mysqli_prepare($conn, "INSERT INTO servicebilling (order_id, product_id, quantity, price, order_date) VALUES (?, ?, ?, ?, ?)");
         foreach ($products as $product) {
-            $product_id = $product['id'];
-            $quantity = $product['quantity'];
-            $price = $product['selling_price']; // Assuming 'selling_price' is the column name for product price
-            $insert_order_item_query = "INSERT INTO servicebilling (order_id, product_id, quantity, price, order_date) VALUES ('$order_id', '$product_id', '$quantity', '$price', '$currentDate')";
-            mysqli_query($conn, $insert_order_item_query);
+            mysqli_stmt_bind_param($stmt, "iiids", $order_id, $product['id'], $product['quantity'], $product['selling_price'], $currentDate);
+            mysqli_stmt_execute($stmt);
         }
+        mysqli_stmt_close($stmt);
 
         // Handle optional details
-        $optionalDetail = $_POST['optionalDetail'] ?? ''; // Get optional detail from the form
-        $cashOptionalDetail = $_POST['cashOptionalDetail'] ?? ''; // Get cash optional detail from the form
-        $details = ($payment_method == 'cash') ? $cashOptionalDetail : $optionalDetail;
-
-        // If $details is empty, set it to NULL
-        if (empty($details)) {
-            $details = null;
-        }
-
-        // Update the order record with the optional detail
+        $details = ($_POST['optionalDetail'] ?? '') ?: ($_POST['cashOptionalDetail'] ?? null);
+        $details = empty($details) ? null : $details;
         $update_order_query = "UPDATE salesreport SET detail = ? WHERE id = ?";
         $update_statement = mysqli_prepare($conn, $update_order_query);
         mysqli_stmt_bind_param($update_statement, "si", $details, $order_id);
         mysqli_stmt_execute($update_statement);
 
-        // Clear the cart after successful order placement
+        // Clear the cart
         unset($_SESSION['cart']);
-
-        // Generate the receipt HTML for the modal
-        $receipt_html = '<h2>Receipt</h2>';
-        // Add order details
-        $receipt_html .= '<h4>Order Summary</h4>';
-        $receipt_html .= '<table class="table">';
-        $receipt_html .= '<thead><tr><th>Item</th><th>Quantity</th><th>Price</th><th>Total</th></tr></thead>';
-        $receipt_html .= '<tbody>';
-        foreach ($products as $product) {
-            $receipt_html .= '<tr>';
-            $receipt_html .= '<td>' . $product['item_name'] . '</td>';
-            $receipt_html .= '<td>' . $product['quantity'] . '</td>';
-            $receipt_html .= '<td>₱' . number_format($product['selling_price'], 2) . '</td>';
-            $receipt_html .= '<td>₱' . number_format($product['selling_price'] * $product['quantity'], 2) . '</td>';
-            $receipt_html .= '</tr>';
-        }
-        $receipt_html .= '</tbody>';
-        $receipt_html .= '<tfoot><tr><th colspan="3" class="text-right">Total:</th><th>₱' . number_format($totalPrice, 2) . '</th></tr></tfoot>';
-        $receipt_html .= '</table>';
-
-        // Pass the receipt HTML to a JavaScript variable
+        
+        // Trigger the modal to display the receipt
         echo "<script>
-                var receiptHTML = " . json_encode($receipt_html) . ";
                 document.addEventListener('DOMContentLoaded', function() {
-                    var receiptModalBody = document.getElementById('receiptModalBody');
-                    receiptModalBody.innerHTML = receiptHTML;
                     $('#receiptModal').modal('show');
                 });
               </script>";
     } else {
-        // Handle insertion failure
-        $error_message = "Failed to place the order. Please try again.";
+        echo "Failed to place the order. Please try again.";
     }
 }
+
+
+// function displayReceipt($products, $totalPrice) {
+//     $receipt_html = '<h2>Receipt</h2><h4>Order Summary</h4><table class="table"><thead><tr><th>Item</th><th>Quantity</th><th>Price</th><th>Total</th></tr></thead><tbody>';
+//     foreach ($products as $product) {
+//         $receipt_html .= '<tr><td>' . $product['item_name'] . '</td><td>' . $product['quantity'] . '</td><td>₱' . number_format($product['selling_price'], 2) . '</td><td>₱' . number_format($product['selling_price'] * $product['quantity'], 2) . '</td></tr>';
+//     }
+//     $receipt_html .= '</tbody><tfoot><tr><th colspan="3" class="text-right">Total:</th><th>₱' . number_format($totalPrice, 2) . '</th></tr></tfoot></table>';
+//     echo "<script>
+//             var receiptHTML = " . json_encode($receipt_html) . ";
+//             document.addEventListener('DOMContentLoaded', function() {
+//                 var receiptModalBody = document.getElementById('receiptModalBody');
+//                 receiptModalBody.innerHTML = receiptHTML;
+//                 $('#receiptModal').modal('show');
+//             });
+//           </script>";
+// }
 ?>
 
 <!DOCTYPE html>
@@ -224,7 +211,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             </div>
             <div class="modal-body" id="receiptModalBody">
-                <!-- Receipt HTML will be inserted here by JavaScript -->
+                <!-- Receipt HTML will be generated and inserted here by PHP -->
+                <?php if (isset($products) && !empty($products)): ?>
+                    <h2>Receipt</h2>
+                    <h4>Order Summary</h4>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($products as $product): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($product['item_name']) ?></td>
+                                    <td><?= htmlspecialchars($product['quantity']) ?></td>
+                                    <td>₱<?= number_format($product['selling_price'], 2) ?></td>
+                                    <td>₱<?= number_format($product['selling_price'] * $product['quantity'], 2) ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3" class="text-right">Total:</th>
+                                <th>₱<?= number_format($totalPrice, 2) ?></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                <?php else: ?>
+                    <p>No items in the order.</p>
+                <?php endif; ?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="redirectToShop()">Proceed</button>
@@ -233,6 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </div>
+
 
 <script>
     document.getElementById('paymentMethod').addEventListener('change', function() {
