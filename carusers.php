@@ -163,7 +163,7 @@ $company_info = mysqli_fetch_assoc($company_select);
     </div>
     
     <!-- Sectioning -->
-    <section class="absolute top-20 left-64 h-screen" style="width: 80%;">
+    <section class="absolute top-20 left-64 h-screen" style="width: 80%; left: 350px;">
         
         <div class="container" style="margin-top: 5px;">
         <br>

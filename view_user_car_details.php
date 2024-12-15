@@ -103,7 +103,7 @@ if (isset($_POST['update_user'])) {
     $lastname = $_POST['lastname'];
     $homeaddress = $_POST['homeaddress'];
     $email = $_POST['email'];
-    $car_id = $_POST['car_id']; // Ensure car_id is captured
+    $car_id = $_POST['car_id'];
 
     // Update the user details in the database
     $update_query = "UPDATE user SET firstname = '$firstname', middlename = '$middlename', lastname = '$lastname', homeaddress = '$homeaddress', email = '$email' WHERE id = '$user_id'";

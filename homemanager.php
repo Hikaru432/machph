@@ -94,7 +94,7 @@ document.addEventListener('click', function(e) {
   if (e.target && e.target.classList.contains('view-details')) {
     const userId = e.target.getAttribute('data-user-id');
     const carId = e.target.getAttribute('data-car-id');
-    const companyid = "<?php echo $companyid; ?>";  // Get companyid from PHP session
+    const companyid = "<?php echo $companyid; ?>"; 
 
     window.location.href = `view_user_car_details.php?user_id=${userId}&car_id=${carId}&companyid=${companyid}`;
   }
@@ -144,7 +144,7 @@ document.addEventListener('click', function(e) {
 </script>
 <style>
     .highlighted {
-        background-color: yellow; /* Changed to yellow for better visibility */
+        background-color: yellow; 
     }
 </style>
 

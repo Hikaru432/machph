@@ -1,14 +1,14 @@
 <?php
 session_start();
 
+// Include the database configuration file
+include 'config.php';
+
 // Redirect to login.php if the user is not logged in or session variable is not set
 if (!isset($_SESSION['user_id'])) {
     header('location:login.php');
     exit();
 }
-
-// Include the database configuration file
-include 'config.php';
 
 // Get the user ID from the session
 $user_id = $_SESSION['user_id'];
@@ -19,7 +19,7 @@ $query = "SELECT manufacturer.name AS manuname, car.carmodel, car.color, car.car
           LEFT JOIN accomplishtask ON car.car_id = accomplishtask.car_id
           LEFT JOIN manufacturer ON car.manufacturer_id = manufacturer.id
           WHERE car.user_id = $user_id
-          GROUP BY car.car_id"; // Group by car_id to avoid duplicates
+          GROUP BY car.car_id";
 
 $result = mysqli_query($conn, $query);
 
@@ -137,14 +137,17 @@ if (!$result) {
     </div>
     
     <!-- Sectioning -->
-    <section class="absolute top-20 left-20 h-screen" style="width: 1290px;">
+    <section class="absolute top-20 left-20 h-screen" style="width: 1290px; left: 350px ;">
 
         <div class="container mt-5">
         <h2>User Vehicles</h2>
 
+        <!-- For Notification -->
+
         <button type="button" class="btn-message" id="messageButton" style="margin-left: 1000px;">
             Notification <span id="notificationDot" style="display:none; color: #ffff3f;">●</span>
-        </button>
+        </button> 
+           
 
         <div id="messageModal" class="modal">
             <div class="modal-content">
@@ -284,13 +287,15 @@ if (!$result) {
 
         <!-- Table for Car list -->
 
-        <table class="table table-bordered">
+        <table class="table table-bordered" style="left: 1000px;">
             <thead>
                 <tr>
                     <th>Manufacturer</th>
                     <th>Car Model</th>
                     <th>Color</th>
                     <th>Progress</th>
+                    <th>Chat</th>
+                    <th>Survey</th>
                 </tr>
             </thead>
             <tbody>
@@ -348,6 +353,13 @@ if (!$result) {
                         echo "<td>{$row['carmodel']}</td>";
                         echo "<td>{$row['color']}</td>";
                         echo "<td class='$progressColor' onclick='toggleDetails(this)' data-details='$additionalInfo'>$progressStatus ({$progressPercentage}%)</td>";
+                        echo '<td><a href="chatuser.php?car_id=' . $row['car_id'] . '&user_id=' . $_SESSION['user_id'] . '"><i class="chat-icon">Chat</i></a></td>';
+                        echo '<td>
+                        <a href="scale.php?car_id=' . $row['car_id'] . '&user_id=' . $_SESSION['user_id'] . '" 
+                           style="display: inline-block; background-color: #4CAF50; color: white; padding: 8px 12px; text-decoration: none; border-radius: 5px; font-size: 14px; font-weight: bold; transition: background-color 0.3s;">
+                           <i class="survey-icon" style="margin-right: 5px;">&#128221;</i>Take Survey
+                        </a>
+                      </td>';
                         echo "</tr>";
                         echo "<tr class='details' style='display:none;'><td colspan='4' class='details-content'></td></tr>";
                     }
@@ -362,7 +374,8 @@ if (!$result) {
                         });
                     </script>
                 <?php endif; ?>
-            </tbody>
+                    </tbody>
+
         </table>
 
         <script>
@@ -379,47 +392,6 @@ if (!$result) {
             }
         }
         </script>
-
-
-<!-- Modal Structure -->
-<div id="surveyModal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Survey Prompt</h5>
-                <button type="button" class="close" onclick="closeModal()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>How is your experience. Would you like to proceed to the survey?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">Not Now</button>
-                <button type="button" class="btn btn-primary" onclick="proceedToSurvey()">Proceed</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Function to open the modal
-    function openModal() {
-        const modal = document.getElementById('surveyModal');
-        modal.style.display = 'block';
-    }
-
-    // Function to close the modal
-    function closeModal() {
-        const modal = document.getElementById('surveyModal');
-        modal.style.display = 'none';
-    }
-
-    // Function to proceed to the survey page
-    function proceedToSurvey() {
-        window.location.href = 'survey.php'; // Redirect to survey.php
-    }
-</script>
 
 <style>
     /* Basic styling for the modal */

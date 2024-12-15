@@ -131,10 +131,14 @@ if ($user_result && mysqli_num_rows($user_result) > 0) {
             }
             ?>
         </li>
-
             <li class="px-4"><p class="mb-2 font-medium">User Name: <?php echo '<span class="font-normal">'.$user_info['name'].'</span>'; ?></p></li>
             <li class="px-4"><p class="mb-2 font-medium">Car Model: <?php echo '<span class="font-normal">'. $carmodel . '</span>'; ?></p></li>
             <li class="px-4"><p class="mb-2 font-medium">Plate #:  <?php echo '<span class="font-normal">'. $plateno . '</span>'; ?></p></li>
+            <button>
+                <a href="chatuser.php?mechanic_id=<?= $_GET['mechanic_id']; ?>&car_id=<?= $_GET['car_id']; ?>&user_id=<?= $_GET['user_id']; ?>">
+                    Chat
+                </a>
+            </button>
         </ul>
 
         <!-- The repair check box -->

@@ -408,7 +408,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!-- For section 2 -->
 
-    <section class="carprofile-section-2">
+    <section class="carprofile-section-2" style="left: 1100px; width: 1000px;">
      <div class="major-maintenance-container">
         <form method="post" action="">
             <div class="data-major-container">

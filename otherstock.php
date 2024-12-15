@@ -210,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <div class="mb-3">
-                        <label for="custom_item" class="form-label">Custom Request (if not available)</label>
+                        <label for="custom_item" class="form-label">Comment</label>
                         <input type="text" class="form-control" id="custom_item" name="custom_item" placeholder="Enter custom item name">
                     </div>
 
@@ -223,8 +223,136 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <button type="submit" class="btn btn-primary w-100">Send Request</button>
                 </form>
+                <!-- <div class="col-lg-4">
+                    <button type="button" class="btn btn-info w-100" data-bs-toggle="modal" data-bs-target="#chatModal">Message</button>
+                </div> -->
             </div>
         </div>
+        <!-- Chat Modal -->
+            <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="chatModalLabel">Chat with Sender</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Sender List -->
+                            <div id="senderList">
+                                <h5>Select a sender to view chat</h5>
+                                <ul class="list-group" id="senders">
+                                    <!-- Senders will be dynamically loaded here -->
+                                </ul>
+                            </div>
+
+                            <!-- Chat View -->
+                            <div id="chatView" class="d-none">
+                                <h5>Messages</h5>
+                                <div id="chatMessages" class="mb-3" style="max-height: 300px; overflow-y: auto;">
+                                    <!-- Messages will be loaded here -->
+                                </div>
+                                <textarea id="chatMessage" class="form-control" placeholder="Type a message..."></textarea>
+                                <button type="button" class="btn btn-primary mt-2" id="sendMessageBtn">Send Message</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                // Trigger when "Message" button is clicked
+                document.getElementById('chatModal').addEventListener('show.bs.modal', function () {
+                    loadSenders();
+                });
+
+                // Load the list of senders
+                function loadSenders() {
+                    const requestId = <?php echo $_GET['request_id']; ?>; // Assuming request_id is passed in the URL
+                    const companyId = <?php echo $main['companyid']; ?>; // Company ID from session or autoshop table
+
+                    fetch(`getSenders.php?request_id=${requestId}&company_id=${companyId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const senderList = document.getElementById('senders');
+                            senderList.innerHTML = '';
+                            data.forEach(sender => {
+                                const li = document.createElement('li');
+                                li.classList.add('list-group-item');
+                                li.textContent = sender.company_name;
+                                li.dataset.senderId = sender.sender_id; // Store sender_id for later
+                                li.addEventListener('click', function () {
+                                    loadChat(sender.sender_id);
+                                });
+                                senderList.appendChild(li);
+                            });
+                        })
+                        .catch(error => console.log('Error loading senders:', error));
+                }
+
+                // Load chat messages when sender is clicked
+                function loadChat(senderId) {
+                    const requestId = <?php echo $_GET['request_id']; ?>;
+
+                    fetch(`getChatMessages.php?request_id=${requestId}&sender_id=${senderId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const chatMessages = document.getElementById('chatMessages');
+                            chatMessages.innerHTML = '';
+                            data.forEach(msg => {
+                                const msgDiv = document.createElement('div');
+                                msgDiv.classList.add('message');
+                                msgDiv.innerHTML = `<strong>${msg.sender_name}:</strong> ${msg.message} <small>(${msg.sent_at})</small>`;
+                                chatMessages.appendChild(msgDiv);
+                            });
+
+                            document.getElementById('senderList').classList.add('d-none');
+                            document.getElementById('chatView').classList.remove('d-none');
+                        })
+                        .catch(error => console.log('Error loading chat:', error));
+                }
+
+                // Send message to the selected sender
+                document.getElementById('sendMessageBtn').addEventListener('click', function () {
+                    const message = document.getElementById('chatMessage').value.trim();
+                    if (message === '') {
+                        alert('Please enter a message!');
+                        return;
+                    }
+
+                    const senderId = document.querySelector('#senders .active')?.dataset.senderId;
+                    const requestId = <?php echo $_GET['request_id']; ?>;
+                    const companyId = <?php echo $main['companyid']; ?>;
+
+                    if (!senderId) {
+                        alert('No sender selected.');
+                        return;
+                    }
+
+                    const payload = {
+                        request_id: requestId,
+                        company_id: companyId,
+                        sender_id: companyId, // Assuming you're sending as the main company
+                        message: message,
+                    };
+
+                    fetch('sendMessage.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            loadChat(senderId); // Reload the chat to show the new message
+                            document.getElementById('chatMessage').value = ''; // Clear input
+                        } else {
+                            console.error('Error sending message:', data.error);
+                        }
+                    })
+                    .catch(error => console.log('Error sending message:', error));
+                });
+            </script>
+
         <script>
             document.getElementById('destination_companyid').addEventListener('change', function() {
                 var destinationId = this.value;

@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $query = "INSERT INTO autoshop (companyname, companyemail, companyphonenumber, streetaddress, city, region, zipcode, country, cname, cpassword, companyimage, role)
                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Branch')";
             $stmt = $conn->prepare($query);
-            $stmt->bind_param("sssssssssss", $companyname, $companyemail, $companyphonenumber, $streetaddress, $city, $region, $zipcode, $country, $cname, $cpassword, $role);
+            $stmt->bind_param("sssssssssss", $companyname, $companyemail, $companyphonenumber, $streetaddress, $city, $region, $zipcode, $country, $cname, $cpassword, $companyimage);
             $stmt->execute();
 
             // Get the `companyid` of the newly inserted branch
@@ -79,7 +79,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
