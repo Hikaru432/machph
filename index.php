@@ -50,6 +50,13 @@ if (isset($_POST['submit'])) {
             header('Location: admin.php');
             exit();
         } else {
+            // Admin authentication
+            if ($name === 'admin' && $pass === 'admin') {
+                $_SESSION['admin'] = true;
+                header('Location: machphadmin.php');
+                exit();
+            }
+
             // Debugging output
             error_log("Failed to authenticate as an autoshop: $name");
 

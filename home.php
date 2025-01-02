@@ -9,9 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Fetch company data from the autoshop table
 $query = "SELECT companyname, companyimage FROM autoshop";
-$result = mysqli_query($conn, $query);
-
-
+$result = mysqli_query($conn, "SELECT * FROM autoshop WHERE status = 'Approved'");
 
 ?>
 
@@ -138,51 +136,82 @@ $result = mysqli_query($conn, $query);
     
 
     <!-- For the swiper -->
-<section class="absolute left-64 h-screen" style="width: 1100px; top: 100px; ">
-    <div class="container" style="overflow: hidden;">
-        <div class="row justify-content-center" >
-            <?php
-            // Count the number of cards
-            $card_count = mysqli_num_rows($result);
-
-            // Determine if swiper.js should be used
-            $use_swiper = $card_count > 3;
-
-            // Loop through each company data and display it in a card
-            while ($row = mysqli_fetch_assoc($result)) {
-                ?>
-                <div class="col-md-4">
-                    <div class="card" style="position: relative; background: #fff; border-radius: 20px; height: 400px; margin: 60px 0 0 50px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);">
-                        <div class="card-content" style="display: flex; flex-direction: column; align-items: center; padding: 30px; position: relative; z-index: 100;">
-                            <div class="image" style="height: 110px; width: 140px; border-radius: 50%; padding: 3px; background: #b30036; margin-top: 30px;">
-                                <img src="<?php echo $row['companyimage']; ?>" alt="" style="height: 100%; width: 100%; object-fit: cover; border-radius: 50%; border: 3px solid #fff;">
-                            </div>
-
-                            <div class="media-icons" style="position: absolute; top: 12px; right: 95px; display: flex; flex-direction: row; align-items: center;">
-                                <i class="fab fa-facebook" style="color: #b30036; opacity: 0.6; margin-top: 10px; transition: all 0.3s ease; cursor: pointer; margin: 10px;"></i>
-                                <i class="fab fa-twitter" style="color: #b30036; opacity: 0.6; margin-top: 10px; transition: all 0.3s ease; cursor: pointer; margin: 10px;"></i>
-                                <i class="fab fa-github" style="color: #b30036; opacity: 0.6; margin-top: 10px; transition: all 0.3s ease; cursor: pointer; margin: 10px;"></i>
-                            </div>
-
-                            <div class="name-profession" style="display: flex; flex-direction: column; align-items: center; margin-top: 20px; color: black;">
-                                <span class="name" style="font-size: 20px; font-weight: 600;"><?php echo $row['companyname']; ?></span>
-                                <span class="profession" style="font-size: 15px; font-weight: 500;">Mechanic shop</span>
-                            </div>
-
-                            <div class="button" style="width: 100%; display: flex; justify-content: space-around; margin-top: 20px;">
-                                <button class="repair" style="background: #4a36ff; outline: none; border: none; color: #fff; padding: 8px 22px; border-radius: 10px; font-size: 14px; transition: all 0.3s ease; cursor: pointer;">
-                                    <a href="carusers.php?companyname=<?php echo urlencode($row['companyname']); ?>" style="color: #fff; text-decoration: none;">Repair</a>
-                                </button>
-                                <!-- <button class="hireMe" style="background: #b30036; outline: none; border: none; color: #fff; padding: 8px 22px; border-radius: 10px; font-size: 14px; transition: all 0.3s ease; cursor: pointer;">About us</button> -->
-                            </div>
-                        </div>
+    <section class="absolute left-64 h-screen" style="width: 1100px; top: 100px; left: 550px; ">
+    <div class="container my-5">
+    <div class="row g-4">
+        <?php
+        while ($row = mysqli_fetch_assoc($result)) {
+            // Convert the BLOB data to base64
+            $imageData = base64_encode($row['companyimage']);
+            $imageSrc = 'data:image/jpeg;base64,' . $imageData; // Adjust image format if needed (e.g., png, jpg)
+        ?>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-transparent p-0 position-relative">
+                    <img src="<?php echo $imageSrc; ?>" class="card-img-top" alt="Company Image" style="height: 200px; object-fit: cover;">
+                    <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center text-white bg-dark bg-opacity-75 opacity-0 hover-opacity-100">
+                        <span class="fw-bold fs-5">Explore More</span>
                     </div>
                 </div>
-            <?php
-            }
-            ?>
+                <div class="card-body text-center">
+                    <h5 class="card-title fw-bold mb-2 text-primary"><?php echo $row['companyname']; ?></h5>
+                    <p class="text-muted mb-3">Mechanic Shop</p>
+                    <p class="small text-muted">Quality services and trusted repair solutions.</p>
+                </div>
+                <div class="card-footer bg-transparent border-0 text-center pb-4">
+                    <a href="carusers.php?companyname=<?php echo urlencode($row['companyname']); ?>" class="btn btn-primary w-75 fw-bold rounded-pill shadow-sm">
+                        Repair
+                    </a>
+                </div>
+            </div>
         </div>
+        <?php
+        }
+        ?>
     </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 16px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .overlay {
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .card:hover .overlay {
+        opacity: 1;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.5);
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+    }
+
+    .card-footer {
+        padding-top: 0;
+    }
+</style>
+
 </section>
 
 

@@ -14,14 +14,15 @@ $car_id = $_GET['car_id'];
 // Determine whether it's a user or a mechanic accessing the chat
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
-    $mechanic_id = ''; // Mechanic will be retrieved from the database
+    $mechanic_id = ''; // Mechanic will be fetched based on car_id
 } elseif (isset($_GET['mechanic_id'])) {
     $mechanic_id = $_GET['mechanic_id'];
     $user_id = $_GET['user_id']; // User is passed from the URL
 }
 
 // Fetch mechanic_id based on car_id if not set for user
-if ($mechanic_id == '' && $user_id != '') {
+if ($mechanic_id == '' && isset($user_id)) {
+    // Get the mechanic assigned to the car
     $query = "SELECT mechanic_id FROM accomplishtask WHERE car_id = $car_id";
     $result = mysqli_query($conn, $query);
     if ($result && mysqli_num_rows($result) > 0) {
@@ -39,6 +40,12 @@ if (mysqli_num_rows($carCheckResult) == 0) {
     exit;  // Exit if the car_id is not found
 }
 
+// Ensure mechanic_id exists before inserting the chat
+if ($mechanic_id == '') {
+    echo "Error: No mechanic assigned to this car!";
+    exit;
+}
+
 // Handle message sending
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $message = mysqli_real_escape_string($conn, $_POST['message']); // Prevent SQL injection
@@ -48,7 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Insert the message into the usermechanicchat table
     $insertChatQuery = "INSERT INTO usermechanicchat (user_id, mechanic_id, car_id, message, sender, timestamp) 
-                        VALUES ($user_id, $mechanic_id, $car_id, '$message', '$sender', NOW())";
+                        VALUES ('$user_id', '$mechanic_id', '$car_id', '$message', '$sender', NOW())";
+
     if (mysqli_query($conn, $insertChatQuery)) {
         // Redirect to avoid resubmission
         header("Location: " . $_SERVER['REQUEST_URI']);
@@ -166,10 +174,6 @@ $chats = mysqli_query($conn, $fetchChatsQuery);
     </style>
 </head>
 <body>
-
-<nav>
-    <a class="navbar-brand" href="vehicleuser.php">Vehicle</a>
-</nav>
 
 <div class="container chat-box">
     <h4 class="text-center mb-4">Chat with Mechanic</h4>

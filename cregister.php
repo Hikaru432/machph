@@ -18,34 +18,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $maincompanyid = $role === 'Branch' ? $_POST['maincompanyid'] : null;
 
     // File upload handling
-    $target_directory = dirname(__FILE__) . "/uploaded_img/";
-    $target_file = $target_directory . basename($_FILES["companyimage"]["name"]);
-    $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
-    if (isset($_POST["submit"])) {
-        $check = getimagesize($_FILES["companyimage"]["tmp_name"]);
-        if ($check !== false) {
-            $uploadOk = 1;
-        } else {
-            echo "File is not an image.";
-            $uploadOk = 0;
-        }
-    }
-
-    if ($_FILES["companyimage"]["size"] > 500000) {
-        echo "Sorry, your file is too large.";
-        $uploadOk = 0;
-    }
-
-    if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
-        echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-        $uploadOk = 0;
-    }
-
-    if ($uploadOk && move_uploaded_file($_FILES["companyimage"]["tmp_name"], $target_file)) {
-        $companyimage = $target_file;
-
+    if ($_FILES["companyimage"]["error"] == 0) {
+        // Read image as binary data
+        $companyimage = file_get_contents($_FILES["companyimage"]["tmp_name"]);
+        
+        // Insert into the database
         if ($role === "Main") {
             // Insert into autoshop for Main company
             $query = "INSERT INTO autoshop (companyname, companyemail, companyphonenumber, streetaddress, city, region, zipcode, country, cname, cpassword, companyimage, role)
@@ -79,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

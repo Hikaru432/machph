@@ -46,32 +46,62 @@ $categories = [
     'Tangibles' => [
         'Q1' => 'Service staff appearance.',
         'Q2' => 'State of the art equipments in service workshop.',
-        'Q3' => 'Overall service workshop appearance.'
+        'Q3' => 'Visual signs and message for customers.',
+        'Q4' => 'Acessibility to service entrance.',
+        'Q5' => 'Acessibility to service reception area.',
+        'Q6' => 'Amenities (TV, WiFi, furnitures, and refreshments).',
+        'Q7' => 'Courtesy items installed to vehicles (floor mats; steering, shifter and handbrake covers).',
+        'Q8' => 'Overall service reception appearance (service counters and waiting area).',
+        'Q9' => 'Overall service workshop appearance (equipments, tools, and working bays). ',
+        'Q10' => 'Overall facility appearance (accessibility, cleanliness, ambience, etc.).'
     ],
     'Reliability' => [
         'Q1' => 'Ease of arranging appointment schedule.',
         'Q2' => 'Prioritization on appointment customers.',
         'Q3' => 'Addressing customer vehicle concerns and requests.',
-        'Q4' => 'Service staff returns personal belongings and other valuable items.'
+        'Q4' => 'Accomodation on walk-in customers.',
+        'Q5' => 'Promised time on service completion.',
+        'Q6' => 'Fairness on cost estimate prior to servicing.',
+        'Q7' => 'Vehicle cleanliness (interior and exterior).',
+        'Q8' => 'Recommendations provided for customer’s vehicle (prior to and after service).',
+        'Q9' => 'Service staff returns personal belongings and other valuable items.',
+        'Q10' => 'All the discussed services were done accurately.'
     ],
     'Responsiveness' => [
         'Q1' => 'Assistant provided by guards or other staffs upon entry.',
         'Q2' => 'Assistant of service executive.',
-        'Q3' => 'Service staff courteousness.'
+        'Q3' => 'Service staff courteousness.',
+        'Q4' => 'Overall service staff responsiveness to customers.',
+        'Q5' => 'Assistance by receptionist staff at the reception area.',
+        'Q6' => 'Waiting time before assisted by the Service Advisor.',
+        'Q7' => 'Service staffs responds to all customer inquiries.',
+        'Q8' => 'Service advisor’s clarity of explanation of service (prior to and after service).',
+        'Q9' => 'Clarity of explanation to service billing or charges.',
+        'Q10' => 'Service staffs promptly serve all customers.'
     ],
     'Assurance' => [
         'Q1' => 'Maintenance reminder for customer\'s upcoming service.',
         'Q2' => 'Confirmation and reminder on customer\'s appointment schedule.',
         'Q3' => 'Informing customer when their vehicle is being serviced.',
         'Q4' => 'Returning of used parts to customers.',
-        'Q5' => 'All customer concerns and requests were done.'
+        'Q5' => 'Vehicle checklisting or inventory system upon entry (interior and exterior condition; valuable items left).',
+        'Q6' => 'Providing warranty on parts and service repairs.',
+        'Q7' => 'Allowing customers to watch their vehicle being service.',
+        'Q8' => 'All customer concerns and requests were done.',
+        'Q9' => 'Service Advisor’s constant update on the vehicle status.',
+        'Q10' => 'All services and requests done were explained and shown upon vehicle pick-up.',
     ],
     'Empathy' => [
         'Q1' => 'Service staffs understand customer needs.',
         'Q2' => 'Service staffs give individual attention to customers.',
         'Q3' => 'Service staffs apologize when customer requests were not done.',
         'Q4' => 'Service staffs assist all customers in a caring manner.',
-        'Q5' => 'Service staffs willingness to help.'
+        'Q5' => 'Service staffs willingness to help.',
+        'Q6' => 'Service staffs apologize when committing mistakes.',
+        'Q7' => 'Convenient schedule for customers.',
+        'Q8' => 'Informing if there will be changes in promised time.',
+        'Q9' => 'Service staffs courtesy..',
+        'Q10' => 'Dealer is competent in correcting customer concerns.',
     ]
 ];
 ?>
