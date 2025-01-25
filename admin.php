@@ -96,8 +96,10 @@ $mechanic_result = mysqli_query($conn, $mechanic_query);
             <a href="add_staff.php?companyid=<?php echo $companyid; ?>" class="btn btn-secondary btn-lg px-5 py-3">Staff</a>
             <a href="addproduct.php?companyid=<?php echo $companyid; ?>&role=<?php echo $company_role; ?>" class="btn btn-success btn-lg px-5 py-3">Product</a>
             <a href="revisit.php?companyid=<?php echo $companyid; ?>" class="btn btn-warning btn-lg px-5 py-3 text-white">Monitoring</a>
-            <a href="dashscale.php?companyid=<?php echo $companyid; ?>" class="btn btn-info btn-lg px-5 py-3 text-white">Survey</a>
+            <a href="dashscale.php?companyid=<?php echo $companyid; ?>" class="btn btn-info btn-lg px-5 py-3 text-white">Dashboard</a>
+            <a href="sales.php?companyid=<?php echo $companyid; ?>" class="btn btn-danger btn-lg px-5 py-3 text-white">Sales</a>
         </div>
+
 
     </div>
 </div>
