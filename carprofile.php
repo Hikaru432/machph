@@ -142,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <!-- Side nav -->
 
-    <div class="wrapper">
+    <div class="wrapper" style="backgroungColor: white;">
         <aside id="sidebar">
             <div class="d-flex">
                 <button class="toggle-btn" type="button">
@@ -233,7 +233,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   
    <!-- Sectioning -->
-   <section class="carprofile-section-1">
+   <section class="carprofile-section-1" style="width: 700px;">
         <div class="container-car-profile">
             <div class="car-profile">
             <?php

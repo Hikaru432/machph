@@ -174,6 +174,11 @@ $chats = mysqli_query($conn, $fetchChatsQuery);
     </style>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="vehicleuser.php">Vehicle</a>
+        </div>
+    </nav>
 
 <div class="container chat-box">
     <h4 class="text-center mb-4">Chat with Mechanic</h4>

@@ -123,7 +123,7 @@ $result = mysqli_query($conn, "SELECT * FROM autoshop WHERE status = 'Approved'"
                 </li>
             </ul>
             <div class="sidebar-footer">
-            <a href="logout.php" target="_blanck" class="sidebar-link">
+            <a href="index.php" class="sidebar-link">
                 <i class="lni lni-exit"></i>
                 <span>Logout</span>
             </a>

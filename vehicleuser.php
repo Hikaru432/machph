@@ -123,7 +123,7 @@ if (!$result) {
             </li>
         </ul>
         <div class="sidebar-footer">
-            <a href="index.php" target="_blanck" class="sidebar-link">
+            <a href="index.php" class="sidebar-link">
                 <i class="lni lni-exit"></i>
                 <span>Logout</span>
             </a>
@@ -352,7 +352,12 @@ if (!$result) {
                         echo "<td>{$row['manuname']}</td>";
                         echo "<td>{$row['carmodel']}</td>";
                         echo "<td>{$row['color']}</td>";
-                        echo "<td class='$progressColor' onclick='toggleDetails(this)' data-details='$additionalInfo'>$progressStatus ({$progressPercentage}%)</td>";
+                        echo "<td class='$progressColor'>
+                            <a href='progress.php?car_id={$row['car_id']}' style='text-decoration: none; color: inherit;'>
+                                $progressStatus ({$progressPercentage}%)
+                            </a>
+                        </td>";
+            
                         echo '<td><a href="chatuser.php?car_id=' . $row['car_id'] . '&user_id=' . $_SESSION['user_id'] . '"><i class="chat-icon">Chat</i></a></td>';
                         echo '<td>
                         <a href="scale.php?car_id=' . $row['car_id'] . '&user_id=' . $_SESSION['user_id'] . '" 

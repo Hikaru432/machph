@@ -2,9 +2,8 @@
 session_start();
 include 'config.php';
 
-// Check if the mechanic is logged in
-if (!isset($_SESSION['mechanic_id'])) {
-    header('location:login.php');
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['mechanic_id']) || !isset($_SESSION['companyid'])) {
+    header('Location: index.php');
     exit();
 }
 
@@ -73,8 +72,56 @@ if ($user_result && mysqli_num_rows($user_result) > 0) {
     // die('Error fetching user information: ' . mysqli_error($conn));
 }
 
-?>
+// For picture update.
 
+// Retrieve session variables
+$user_id = $_SESSION['user_id'];
+$mechanic_id = $_SESSION['mechanic_id'];
+$companyid = $_SESSION['companyid'];
+
+// Initialize a variable to handle the alert message
+$alert_message = "";
+
+// Validate and process the form
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $category = $_POST['category'];
+    $comment = $_POST['comment'];
+    $uploaded_files = $_FILES['pictures'];
+
+    // Process each uploaded file
+    foreach ($uploaded_files['tmp_name'] as $key => $tmp_name) {
+        // Read the file's content as a binary string
+        $file_data = file_get_contents($tmp_name);
+
+        // Check if the file was successfully read
+        if ($file_data === false) {
+            $alert_message = "Error reading the file.";
+            break;
+        }
+
+        // Save record to the database as LONGBLOB
+        $stmt = $conn->prepare("INSERT INTO pictureprogress (user_id, mechanic_id, car_id, category, comment, picture, companyid) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("iiisssi", $user_id, $mechanic_id, $car_id, $category, $comment, $file_data, $companyid);
+
+        if ($stmt->execute()) {
+            $alert_message = "Progress submitted successfully!";
+        } else {
+            $alert_message = "Error: " . $stmt->error;
+        }
+    }
+}
+
+// Fetch uploaded pictures based on category and company
+$category_to_fetch = isset($_GET['category']) ? $_GET['category'] : 'Mechanical Issues'; // Default category
+
+// Prepare the query to fetch pictures, ensuring it works with multiple uploads from the same user and mechanic
+$fetch_stmt = $conn->prepare("SELECT * FROM pictureprogress WHERE category = ? AND companyid = ?");
+$fetch_stmt->bind_param("si", $category_to_fetch, $companyid);
+$fetch_stmt->execute();
+$result = $fetch_stmt->get_result();
+
+?>
 
     <!DOCTYPE html>
     <html lang="en">
@@ -426,6 +473,126 @@ if ($user_result && mysqli_num_rows($user_result) > 0) {
     <input type="hidden" id="car-id" value="<?php echo $car_id; ?>">
     <input type="hidden" id="mechanic-id" value="<?php echo $_SESSION['mechanic_id']; ?>">
 
+    <br>
+    <br>
+    <div class="container mt-5">
+    <h1 class="text-center mb-4" style="font-size: 32px; color: #4A4A4A;">Update Progress</h1>
+    <div class="row">
+        <!-- Left: Form Section -->
+        <div class="col-md-6">
+            <div class="card shadow-lg" style="background-color: #f4f4f4; padding: 20px; border-radius: 8px;">
+                <h3 class="text-center mb-4" style="color: #333;"></h3>
+                <!-- Show alert message if any -->
+                <?php if ($alert_message): ?>
+                    <div class="alert <?php echo strpos($alert_message, 'successfully') !== false ? 'alert-success' : 'alert-danger'; ?>">
+                        <?php echo $alert_message; ?>
+                    </div>
+                <?php endif; ?>
+                <!-- Picture submit form -->
+                <form action="" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="category" class="form-label" style="font-weight: bold;">Select Category:</label>
+                        <select name="category" id="category" class="form-select" required>
+                            <option value="Mechanical Issues">Mechanical Issues</option>
+                            <option value="Fuel and Air Intake System">Fuel and Air Intake System</option>
+                            <option value="Cooling and Lubrication">Cooling and Lubrication</option>
+                            <option value="Battery">Battery</option>
+                            <option value="Light">Light</option>
+                            <option value="Oil">Oil</option>
+                            <option value="Water">Water</option>
+                            <option value="Brake">Brake</option>
+                            <option value="Air">Air</option>
+                            <option value="Gas">Gas</option>
+                            <option value="Tire">Tire</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="comment" class="form-label" style="font-weight: bold;">Comment:</label>
+                        <textarea name="comment" id="comment" class="form-control" rows="4" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="pictures" class="form-label" style="font-weight: bold;">Upload Pictures:</label>
+                        <input type="file" name="pictures[]" id="pictures" class="form-control" multiple accept="image/*">
+                    </div>
+                    <input type="hidden" id="car_id" value="<?php echo $car_id; ?>">
+                    <button type="submit" class="btn btn-primary w-100" style="background-color: #007BFF; border-color: #007BFF; font-weight: bold;">Submit</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right: Uploaded Images Section -->
+        <div class="col-md-6">
+            <div class="card shadow-lg" style="background-color: #f9f9f9; padding: 20px; border-radius: 8px;">
+                <h3 class="text-center mb-4" style="font-size: 20px; color: #333; font-weight: bold;">Uploaded Images per Category</h3>
+
+                <?php
+                // Define the categories you want to display
+                $categories = ['Mechanical Issues', 'Fuel and Air Intake System', 'Cooling and Lubrication', 'Battery', 'Light', 'Oil', 'Water', 'Brake', 'Air', 'Gas', 'Tire'];
+
+                // Iterate through the categories
+                foreach ($categories as $category_to_fetch): 
+                    // Fetch the pictures for the current category filtered by mechanic_id, user_id, and companyid
+                    $fetch_stmt = $conn->prepare("SELECT * FROM pictureprogress WHERE category = ? AND mechanic_id = ? AND user_id = ? AND companyid = ?");
+                    $fetch_stmt->bind_param("siii", $category_to_fetch, $mechanic_id, $user_id, $companyid);
+                    $fetch_stmt->execute();
+                    $result = $fetch_stmt->get_result();
+
+                    // Only display the category if there are images uploaded for it
+                    if ($result->num_rows > 0): ?>
+                        <div class="mb-4">
+                            <h4 class="text-center" style="font-size: 18px; color: #555; font-weight: bold;">Category: <?php echo htmlspecialchars($category_to_fetch); ?></h4>
+
+                            <div class="row g-3">
+                                <?php while ($row = $result->fetch_assoc()): ?>
+                                    <div class="col-12">
+                                        <div class="d-flex align-items-start" style="gap: 15px;">
+                                            <img src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" alt="Uploaded Image" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+                                            <p style="font-size: 14px; color: #666; margin: 0;">Comment: <?php echo htmlspecialchars($row['comment']); ?></p>
+                                        </div>
+                                    </div>
+                                <?php endwhile; ?>
+                            </div>
+                        </div>
+                    <?php endif; // End if for displaying category only if images exist ?>
+                <?php endforeach; // End foreach ?>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #e9ecef;
+    }
+    .card {
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+    .form-control {
+        border-radius: 8px;
+    }
+    .btn {
+        transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+    .uploaded-img {
+        width: 100%;
+        height: 150px; /* Ensures uniform height for all images */
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    .row-cols-2 .col, .row-cols-md-3 .col {
+        display: flex;
+        justify-content: center;
+    }
+</style>
 
     <br>
     <br>
@@ -663,6 +830,8 @@ document.getElementById('save-progress-btn').addEventListener('click', function(
     alert('Progress saving initiated for checked items.');
 });
 
+// Picture submit
+
 
 
 
@@ -690,6 +859,59 @@ checkboxes.forEach(function(checkbox) {
 // Initial progress update
 updateProgress();
 </script>
+<style>
+      body {
+            background-color: #f4f4f9; /* Soft background color */
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .alert {
+            margin-bottom: 20px;
+        }
+        .uploaded-img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        .card-body {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 0 0 8px 8px;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .form-label {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .form-control, .form-select, textarea {
+            border-radius: 8px;
+        }
+    
+</style>
 
 </body>
 </html>
