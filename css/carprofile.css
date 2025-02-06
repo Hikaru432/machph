@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,900;1,100;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'poppins';
+}
+
+
+.container-profile {
+    position: relative;
+    top: -650px;
+    left: 150px ;
+}
+
+.profile img {
+    border-radius: 100%;
+    width: 200px;
+}
+
+.profile h3 {
+    margin: 25px 0 0 55px;
+    font-size: 40px;
+    font-weight: 600;
+}
+
+.profile .btn {
+    background-color: rgb(0, 116, 151);
+    color: white;
+    margin: 15px 0 0 25px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: rgba(0, 116, 151, 0.486);
+    cursor: pointer;
+}
+
+
+/* Car section-1 */
+
+
+.carprofile-section-1 {
+    position: absolute;
+    width: 450px;
+    height: 693px;
+    top: 80px;
+    left: 260px;
+
+}
+
+.carprofile-section-2 {
+    position: absolute;
+    width: 700px;
+    height: 693px;
+    top: 84px;
+    left: 700px;
+
+}
+
+.car-profile {
+    margin: 10px;
+}
+
+.car-profile h3 {
+    font-size: 12px;
+    margin: 7px 0 0 12px;
+}
+
+.car-profile img {
+    border-radius: 100%;
+    width: 50px;
+}
+
+.fullname-container-carprofile-1 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.car-info {
+    margin-top: 80px;
+}
+
+.carprofile-container-1,
+.carprofile-container-2,
+.carprofile-container-3,
+.carprofile-container-4,
+.carprofile-container-5,
+.carprofile-container-6,
+.carprofile-container-7 {
+    width: calc(33.33% - 20px);
+    margin: 10px;
+    box-sizing: border-box;
+}
+
+.profile-box {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 0;
+    text-align: center;
+}
+
+
+/* For Data css */
+
+button {
+    background-color: #ff7b00;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 262px;
+}
+
+button:hover {
+    background-color: #ff7b0081;
+}
+
+/* Form range */
+.battery-check-box {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+input[type="range"] {
+    width: 150px;
+    margin: 0 10px; 
+}
+
+.box-range {
+    border: 1px solid #ccc; 
+    width: 130px;
+    padding: 5px; 
+    text-align: center;
+}
+
+label {
+    margin-right: 10px;
+}
+
+.data-maintenance-container h2 {
+    font-size: 25px;
+    font-weight: 600;
+}
+
+/* input alignment */
+
+.data-maintenance-container { /* container alingment */
+    margin: 10px 0 0 100px;
+}
+
+.box-1[type="range"] {
+  margin-left: 30px;
+}
+
+.box-2[type="range"] {
+    margin-left: 48px;
+  }
+
+.box-3[type="range"] {
+    margin-left: 20px;
+  }
+
+.box-4[type="range"] {
+    margin-left: 23px;
+  }
+
+ .box-5[type="range"] {
+    margin-left: 47px;
+  }
+
+.box-6[type="range"] {
+    margin-left: 36px;
+  }
+
+ .box-7[type="range"] {
+    margin-left: 40px;
+  }
+
+
+
+
+
+
+

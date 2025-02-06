@@ -1,0 +1,332 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,900;1,100;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'poppins';
+}
+
+.Header {
+    min-height: 100vh;
+    width: 100%;
+    background-image: linear-gradient(rgb(0, 0, 0),rgba(179, 0, 54, 0.192)),url('../img/background.jpg');
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    
+}
+
+.logo {
+    width: 150px;
+    height: 150px;
+    margin-top: -55px;
+    padding: 30px;
+
+    position: absolute;
+}
+
+/*
+h1 {
+    font-size: 40px;
+    font-family: 'Poppins';
+    padding: 10px 10px 10px;
+    margin-left: 12px;
+    margin-top: 12px;
+    color: rgb(252, 252, 4);
+    border-radius: 10px;
+}
+
+h1:hover {
+  text-decoration:solid;
+  background-color: rgb(216, 12, 192);
+  transition: 0.5s;
+}
+*/
+
+nav {
+    display: flex;
+    padding: 6px 6px;
+    justify-content:space-between ;
+    align-items: center; 
+  }
+
+   
+  .links {
+    flex: 1;
+    text-align: end;
+    padding-right: 50px;
+    padding-top: 12px;
+  }
+
+  nav ul li {
+    list-style: none;
+    display: inline-block;
+    padding-top: 12px;
+    padding-left: 12px;
+
+  }
+
+  nav ul li a {
+    color: white ;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 20px;
+  }
+
+  nav ul li::after {
+    content: "";
+    width: 0%;
+    height: 2px;
+    background: #e1ddde;
+    display: block;
+    margin: auto;
+    transition: 0.5s;
+    
+  
+  }
+
+  
+  nav ul li:hover::after {
+    width: 100%;
+  }
+
+  .title {
+    color: white;
+    font-family: 'poppins';
+    font-size: 30px;
+    font-weight: 600;
+    border: 1px solid #b30036;
+    margin-top: -52px;
+    width: 177px;
+    height: 60px;
+    padding: 1px;
+    text-align: center;
+    padding-top: 7px;
+    left: 75%;
+    position: absolute;
+  }
+
+  
+
+  .title:hover {
+    background-color: #b30036;
+    color: white;
+    cursor: pointer;
+  }
+
+  .statement {
+    text-align: center;
+    color: white;
+    font-size: 17px;
+    margin-top: 17%;
+  }
+  
+  .buttom {
+    color: white;
+    left: 48.5%;
+    top: 90%;
+    padding: 3px;
+    border: 2px solid #e85d04;
+    border-radius: 4px;
+    position: fixed;
+  }
+
+  .buttom:hover {
+    color: #e85d04;
+    border: 2px solid white;
+    background-color: white;
+    transition: .5s;
+
+  }
+
+
+  .hr1 {
+    margin-top: 15.5%;
+    width:790px;
+    bottom: 51.5%;
+    left: 22.5%;
+    position: fixed;
+  }
+
+  .FirstADver img {
+    width: 220px;
+    height: 90px;
+    border-radius: 6px;
+    margin-left: 15px;
+    margin-top: 100px
+  }
+
+  .SecondADver img {
+    width: 220px;
+    height: 90px;
+    border-radius: 6px;
+    margin-left: 15px;
+    margin-top: 10px
+  }
+
+  .ThirdADver img {
+    width: 220px;
+    height: 90px;
+    border-radius: 6px;
+    margin-left: 15px;
+    margin-top: 10px
+  }
+
+  .FourthAd img {
+    width: 500px;
+    height: 100px;
+    left: 64.5%;
+    bottom: 5px;
+    position:fixed;
+  }
+
+/* Body sectioning */
+
+.body {
+  min-height: 100vh;
+  width: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

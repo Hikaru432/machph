@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,900;1,100;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', 'Quicksand';
+}
+
+.container-profile {
+    position: relative;
+    top: -500px;
+    left: 300px ;
+}
+
+.profile {
+    position: relative;
+}
+
+.profile img {
+    border-radius: 100%;
+    width: 80px;
+}
+
+.profile h3 {
+    margin: 10px 0 0 1px;
+    font-size: 40px;
+    font-weight: 600;
+}
+
+.profile .btn {
+    background-color: rgb(0, 116, 151);
+    color: white;
+    margin: 5px 0 0 -35px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: rgba(0, 116, 151, 0.486);
+    cursor: pointer;
+}
+
+.fullname-container {
+    margin: -100px 0 0 190px;
+ }
+ 
+ .profile-box {
+    display: inline-block;
+    padding: 8px;
+    font-size: 20px;
+    border: 1px solid #ccc;
+    width: 190px;
+    border-radius: 5px;
+    margin-right: 50px;
+    margin: 0 0 30px 40px;
+ }
+
+ .profile-box1 {
+    display: inline-block;
+    padding: 8px;
+    border: 1px solid #ccc;
+    width: 190px;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin: 0 0 30px 10px;
+ }
+
+ .profile-box2 {
+    display: inline-block;
+    padding: 8px;
+    border: 1px solid #ccc;
+    width: 190px;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin: 0 0 30px 45px;
+ }
+
+ .profile-box3{
+    display: inline-block;
+    padding: 8px;
+    border: 1px solid #ccc;
+    width: 190px;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin: 0 0 30px 72px;
+ }
+
+ /* 2nd column */
+
+ .profile-box-0 {
+    display: inline-block;
+    padding: 8px;
+    font-size: 20px;
+    border: 1px solid #ccc;
+    width: 190px;
+    border-radius: 5px;
+    margin-right: 50px;
+    margin: 0 0 30px 40px;
+ }
+
+ .profile-box1-1 {
+    display: inline-block;
+    padding: 8px;
+    border: 1px solid #ccc;
+    width: 190px;
+    border-radius: 5px;
+    margin: 0 0 30px 110px;
+ }
+
+ .profile-box2-2 {
+    display: inline-block;
+    padding: 8px;
+    border: 1px solid #ccc;
+    width: 190px;
+    border-radius: 5px;
+    margin: 0 0 30px 52px;
+ }
+
+ .profile-box3-3 {
+    display: inline-block;
+    padding: 8px;
+    border: 1px solid #ccc;
+    width: 190px;
+    border-radius: 5px;
+    margin: 0 0 30px 56px;
+ }
+ 
+
+ .fullname-container-2 {
+    position: absolute;
+    left: 435px;
+    top: 175px;
+ }

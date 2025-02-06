@@ -1,0 +1,233 @@
+Array
+(
+    [user_id] => 89
+    [car_id] => 2
+    [quantity] => Array
+        (
+            [Cylinder Liner] => 0
+            [Piston] => 0
+            [Piston Rings] => 0
+            [Connecting Rod] => 0
+            [Cylinder Head Gasket] => 0
+            [Crankshaft Bearings] => 0
+            [Crankcase Gaskets] => 0
+            [Camshaft(s)] => 0
+            [Valves] => 0
+            [Timing Chain/Built] => 0
+            [Valve Springs] => 0
+            [Rocker Arms] => 0
+            [Valve Guides] => 0
+            [Valve Train Gaskets] => 0
+            [Timing Belt] => 0
+            [Timing Chain Tensioner] => 0
+            [Timing Chain Guide] => 0
+            [Timing Gear] => 0
+            [Crankshaft Sprocket] => 0
+            [Camshaft Cover Gasket] => 0
+            [Fuel Injectors] => 0
+            [Fuel Pump] => 0
+            [Fuel Pressure Regulator] => 0
+            [Fuel Filter] => 0
+            [Fuel Rail] => 0
+            [Mass Airflow Sensor (MAF)] => 0
+            [Engine Control Unit (ECU)] => 0
+            [Air Filter] => 0
+            [Air Filter Housin] => 0
+            [Air Intake Hose] => 0
+            [Throttle Body] => 0
+            [Throttle Position Sensor] => 0
+            [Throttle Cable] => 0
+            [Bypass Valve] => 0
+            [Throttle Body Gasket] => 0
+            [Throttle Actuator] => 0
+            [Radiator] => 0
+            [Radiator Cap] => 0
+            [Radiator Hoses] => 0
+            [Thermostat Housing] => 0
+            [Coolant Reservoir Tank] => 0
+            [Engine Oil Seals] => 0
+            [Valve Cover Gasket] => 0
+            [Crankcase Gasket] => 0
+            [Oil Pan Gasket] => 0
+            [Drain Plug and Washer] => 0
+            [Oil Filter] => 0
+            [Camshaft End Plug] => 0
+            [Breather Hoses and PCV] => 0
+            [Battery Replacement] => 0
+            [Battery Load Test] => 0
+            [Charging System Inspection] => 0
+            [Battery Tender or Trickle Charger] => 0
+            [Alternator Inspection] => 0
+            [Voltage Regulator Replacement] => 0
+            [Charging System Voltage Test] => 0
+            [Electrical System Inspection] => 0
+            [Terminal Cleaning] => 0
+            [Terminal Protectors] => 0
+            [Battery Terminal Replacements] => 0
+            [Sealant or Dielectric Grease] => 0
+            [Regular Maintenance] => 0
+            [Environmental Protection] => 0
+            [Bulb Socket Cleaning] => 0
+            [Bulb Replacement] => 0
+            [LED Conversion Kits] => 0
+            [Halogen/HID Bulb Replacement] => 0
+            [Grounding Point Inspection] => 0
+            [Wire Harness Repair Kit] => 0
+            [Voltage Meter/Test Light] => 0
+            [Wire Connectors/Terminals] => 0
+            [Steering Column Covers] => 0
+            [OEM Replacement Switches] => 0
+            [Aftermarket Switches] => 0
+            [Steering Column Switch Assembly] => 0
+            [Gasket Replacement] => 0
+            [Seal Replacement] => 0
+            [Oil Pan Replacement] => 0
+            [Oil Filter Housing Gasket Replacement] => 0
+            [Oil Cooler Replacement] => 0
+            [PCV Valve Replacement] => 0
+            [Valve Stem Seal Replacement] => 0
+            [Engine Overhaul/Rebuild] => 0
+            [Oil Consumption Additives] => 0
+            [Oil Change] => 0
+            [Oil Flush] => 0
+            [Air Filter Replacement] => 0
+            [Coolant System Inspection] => 0
+            [Radiator Hose Replacement] => 0
+            [Radiator Cap Replacement] => 0
+            [Radiator Replacement] => 0
+            [Water Pump Replacement] => 0
+            [Coolant Reservoir Cap Replacement] => 0
+            [Coolant Reservoir Replacement] => 0
+            [Coolant System Pressure Test] => 0
+            [Head Gasket Replacement] => 0
+            [Flush and Refill Coolant] => 0
+            [Thermostat Replacement] => 0
+            [Cylinder Head Inspection] => 0
+            [Heater Core Replacement] => 0
+            [Brake Hose Replacement] => 0
+            [Brake Line Replacement] => 0
+            [Brake Caliper Rebuild/Replacement] => 0
+            [Brake Pad Replacement] => 0
+            [Brake Rotor Resurfacing/Replacement] => 0
+            [Brake Caliper Inspection] => 0
+            [Brake Fluid Flush] => 0
+            [Brake Master Cylinder Replacement] => 0
+            [Brake Bleeding] => 0
+            [Air Intake Hose Replacement] => 0
+            [Mass Air Flow Sensor (MAF) Cleaning/Replacement] => 0
+            [Vacuum Hose Replacement] => 0
+            [Intake Manifold Gasket Replacement] => 0
+            [Throttle Body Gasket Replacement] => 0
+            [Fuel Filter Replacement] => 0
+            [Fuel Pump Replacement] => 0
+            [Fuel Injector Cleaning/Replacement] => 0
+            [Fuel Line Replacement] => 0
+            [Fuel Tank Replacement] => 0
+            [Fuel Injector O-Ring Replacement] => 0
+            [Fuel Pump Relay Replacement] => 0
+            [Fuel Cap Replacement] => 0
+            [Evaporative Emissions (EVAP) System Inspection] => 0
+            [Vapor Canister Purge Solenoid Replacement] => 0
+            [Tire Replacement] => 1
+            [Wheel Alignment] => 0
+            [Tire Rotation] => 0
+            [Tire Patch or Plug] => 0
+            [Tire Repair Kit] => 0
+            [Spare Tire Installation] => 0
+            [Tire Pressure Monitoring System] => 0
+            [(TPMS) Sensor Replacement] => 0
+            [Tire Pressure Gaugem] => 0
+            [Tire Inflation Tools] => 0
+        )
+
+    [other_product] => Array
+        (
+            [Mechanical Issues] => Array
+                (
+                    [Piston] => 
+                    [Valve_Train] => 
+                    [Timing_Belt] => 
+                )
+
+            [Fuel and Air Intake System] => Array
+                (
+                    [Fuel_Injection_System] => 
+                    [Air_Filter] => 
+                    [Throttle_Body] => 
+                )
+
+            [Cooling and Lubrication] => Array
+                (
+                    [Coolant_Leaks] => 
+                    [Oil_Leaks] => 
+                )
+
+            [Battery] => Array
+                (
+                    [Battery_age] => 
+                    [Overcharging_or_Undercharging] => 
+                    [Corrosion] => 
+                )
+
+            [Light] => Array
+                (
+                    [Faulty_Bulbs] => 
+                    [Electrical_Wiring_Problems] => 
+                    [Switch_Malfunction] => 
+                )
+
+            [Oil] => Array
+                (
+                    [Oil_Leaks] => 
+                    [Oil_Consumption] => 
+                    [Oil_Contamination] => 
+                )
+
+            [Water] => Array
+                (
+                    [Coolant_Leaks] => 
+                    [Coolant_Loss] => 
+                    [Coolant_Contamination] => 
+                )
+
+            [Brake] => Array
+                (
+                    [Brake_Fluid_Leaks] => 
+                    [Brake_Pad_Wear] => 
+                    [Brake_Fluid_Contamination] => 
+                )
+
+            [Air] => Array
+                (
+                    [Air_Filter_Clogging] => 
+                    [Vacuum_Leaks] => 
+                    [Fuel_System_Issues] => 
+                )
+
+            [Gas] => Array
+                (
+                    [Fuel_System_Leaks] => 
+                    [Fuel_Pump_Failure] => 
+                    [Fuel_Evaporation_and_Vapor_Management] => 
+                )
+
+            [Tire] => Array
+                (
+                    [Tire_Wear] => 
+                    [Tire_Punctures_or_Damage] => 
+                    [Underinflation_or_Overinflation] => 
+                )
+
+        )
+
+    [selected_checkboxes] => Array
+        (
+            [Tire] => Array
+                (
+                    [0] => Tire Replacement
+                )
+
+        )
+
+    [submit] => Submit
+)
