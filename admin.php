@@ -25,32 +25,115 @@ if ($result && mysqli_num_rows($result) > 0) {
 $mechanic_query = "SELECT * FROM mechanic WHERE companyid = '$companyid'";
 $mechanic_result = mysqli_query($conn, $mechanic_query);
 
-// Fetch metrics for dashboard
-$done_repair_count_query = "SELECT COUNT(DISTINCT a.user_id, a.car_id) AS done_count 
-                            FROM accomplishtask a
-                            INNER JOIN car c ON a.car_id = c.car_id
-                            WHERE a.progress_percentage = 100 AND c.companyid = '$companyid'";
+// Updated metrics queries for dashboard
+$done_repair_count_query = "
+    SELECT COUNT(DISTINCT a.user_id, a.car_id) AS done_count 
+    FROM accomplishtask a
+    INNER JOIN service s ON a.user_id = s.user_id AND a.car_id = s.car_id
+    WHERE a.progress_percentage = 90 
+    AND s.companyid = '$companyid'
+    AND NOT EXISTS (
+        SELECT 1 FROM service s2 
+        WHERE s2.user_id = a.user_id 
+        AND s2.car_id = a.car_id 
+        AND s2.date_created > a.progress_date
+    )
+";
 
-$progressing_count_query = "SELECT COUNT(DISTINCT a.user_id, a.car_id) AS progressing_count 
-                            FROM accomplishtask a
-                            INNER JOIN car c ON a.car_id = c.car_id
-                            WHERE a.progress_percentage < 100 AND c.companyid = '$companyid'";
+$progressing_count_query = "
+    SELECT COUNT(DISTINCT a.user_id, a.car_id) AS progressing_count 
+    FROM accomplishtask a
+    INNER JOIN service s ON a.user_id = s.user_id AND a.car_id = s.car_id
+    WHERE a.progress_percentage < 90 
+    AND s.companyid = '$companyid'
+";
 
 $revisit_count_query = "
-    SELECT COUNT(*) AS revisit_count 
+    SELECT COUNT(DISTINCT s.user_id, s.car_id) as revisit_count
     FROM service s
-    INNER JOIN car c ON s.car_id = c.car_id
-    WHERE c.companyid = '$companyid' AND (
-        SELECT COUNT(*) 
-        FROM service s2
-        WHERE s2.user_id = s.user_id
-        AND s2.car_id = s.car_id
-    ) > 1
+    INNER JOIN accomplishtask a ON s.user_id = a.user_id 
+        AND s.car_id = a.car_id
+    WHERE s.companyid = '$companyid'
+        AND a.progress_percentage = 90
+        AND s.date_created > a.progress_date
 ";
 
 $done_repair_count = mysqli_fetch_assoc(mysqli_query($conn, $done_repair_count_query))['done_count'] ?? 0;
 $progressing_count = mysqli_fetch_assoc(mysqli_query($conn, $progressing_count_query))['progressing_count'] ?? 0;
 $revisit_count = mysqli_fetch_assoc(mysqli_query($conn, $revisit_count_query))['revisit_count'] ?? 0;
+
+// Updated query for completed tasks chart (last 7 days)
+$completed_tasks_query = "
+    SELECT 
+        DATE(a.progress_date) as date,
+        COUNT(DISTINCT a.user_id, a.car_id) as count
+    FROM accomplishtask a
+    INNER JOIN service s ON a.user_id = s.user_id AND a.car_id = s.car_id
+    WHERE a.progress_percentage = 90 
+    AND s.companyid = '$companyid'
+    AND a.progress_date >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)
+    AND NOT EXISTS (
+        SELECT 1 FROM service s2 
+        WHERE s2.user_id = a.user_id 
+        AND s2.car_id = a.car_id 
+        AND s2.date_created > a.progress_date
+    )
+    GROUP BY DATE(a.progress_date)
+    ORDER BY date ASC
+";
+
+// Updated query for revisits chart (last 6 months)
+$revisit_query = "
+    SELECT 
+        MONTH(s.date_created) as month,
+        COUNT(DISTINCT s.user_id, s.car_id) as revisit_count
+    FROM service s
+    INNER JOIN accomplishtask a ON s.user_id = a.user_id 
+        AND s.car_id = a.car_id
+    WHERE s.companyid = '$companyid'
+        AND a.progress_percentage = 90
+        AND s.date_created > a.progress_date
+        AND s.date_created >= DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH)
+    GROUP BY MONTH(s.date_created)
+    ORDER BY month ASC
+";
+
+$completed_result = mysqli_query($conn, $completed_tasks_query);
+$revisit_result = mysqli_query($conn, $revisit_query);
+
+// Initialize arrays for the last 7 days (completed tasks)
+$last_7_days = array();
+$completed_counts = array();
+for ($i = 6; $i >= 0; $i--) {
+    $date = date('Y-m-d', strtotime("-$i days"));
+    $last_7_days[date('M d', strtotime($date))] = 0;
+}
+
+// Fill in the actual completed tasks data
+while ($row = mysqli_fetch_assoc($completed_result)) {
+    $date_key = date('M d', strtotime($row['date']));
+    $last_7_days[$date_key] = (int)$row['count'];
+}
+
+// Initialize arrays for the last 6 months (revisits)
+$last_6_months = array();
+$revisit_counts = array();
+for ($i = 5; $i >= 0; $i--) {
+    $month = date('F', strtotime("-$i months"));
+    $last_6_months[$month] = 0;
+}
+
+// Fill in the actual revisit data
+while ($row = mysqli_fetch_assoc($revisit_result)) {
+    $month_key = date('F', mktime(0, 0, 0, $row['month'], 1));
+    $last_6_months[$month_key] = (int)$row['revisit_count'];
+}
+
+// Convert to JSON for JavaScript
+$completed_dates_json = json_encode(array_keys($last_7_days));
+$completed_counts_json = json_encode(array_values($last_7_days));
+$revisit_months_json = json_encode(array_keys($last_6_months));
+$revisit_counts_json = json_encode(array_values($last_6_months));
 ?>
 
 <!DOCTYPE html>
@@ -84,11 +167,14 @@ $revisit_count = mysqli_fetch_assoc(mysqli_query($conn, $revisit_count_query))['
             border-radius: 5px; cursor: pointer;
         }
         .mechanic-list .list-group-item:hover { background-color: #f1f1f1; }
+        .card { transition: transform 0.2s; }
+        .card:hover { transform: translateY(-5px); }
+        .chart-container { position: relative; margin: auto; height: 300px; }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-dark bg-dark px-3">
-        <a class="navbar-brand" href="#">Company</a>
+        <a class="navbar-brand" href="#">Company Dashboard</a>
     </nav>
     <div class="d-flex">
         <div class="sidebar">
@@ -101,61 +187,62 @@ $revisit_count = mysqli_fetch_assoc(mysqli_query($conn, $revisit_count_query))['
             <a href="sales.php?companyid=<?php echo $companyid; ?>">Sales</a>
             <a href="logout.php">Logout</a>
         </div>
-            <div class="container mt-4">
-                <h1 class="display-6 text-center">
-                    Welcome, <?php echo isset($company_data['companyname']) ? $company_data['companyname'] : 'Valued Partner'; ?>!
-                </h1>
-                <p class="lead text-center">Manage your business effectively with our dashboard.</p>
-                <br>
-                <br>
-                <br>
-                <div class="row text-white mb-4">
-                    <div class="col-md-3">
-                        <div class="card bg-primary">
-                            <div class="card-body">
-                                <h5 class="card-title">Primary</h5>
-                                <a href="#" class="text-white">View Details</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card bg-warning">
-                            <div class="card-body">
-                                <h5 class="card-title">Warning</h5>
-                                <a href="#" class="text-dark">View Details</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card bg-success">
-                            <div class="card-body">
-                                <h5 class="card-title">Success</h5>
-                                <a href="#" class="text-white">View Details</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card bg-danger">
-                            <div class="card-body">
-                                <h5 class="card-title">Danger</h5>
-                                <a href="#" class="text-white">View Details</a>
-                            </div>
+        <div class="container mt-4">
+            <h1 class="display-6 text-center">
+                Welcome, <?php echo isset($company_data['companyname']) ? htmlspecialchars($company_data['companyname']) : 'Valued Partner'; ?>!
+            </h1>
+            <p class="lead text-center">Manage your business effectively with our dashboard.</p>
+            
+            <div class="row text-white mb-4">
+                <div class="col-md-4">
+                    <div class="card bg-primary">
+                        <div class="card-body">
+                            <h5 class="card-title">Completed Repairs</h5>
+                            <p class="card-text h2"><?php echo $done_repair_count; ?></p>
+                            <small>First-time completed repairs</small>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">📊 Area Chart</div>
-                            <div class="card-body">
+                <div class="col-md-4">
+                    <div class="card bg-warning">
+                        <div class="card-body">
+                            <h5 class="card-title">In Progress</h5>
+                            <p class="card-text h2"><?php echo $progressing_count; ?></p>
+                            <small>Current ongoing repairs</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-info">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Revisits</h5>
+                            <p class="card-text h2"><?php echo $revisit_count; ?></p>
+                            <small>Vehicles returned for service</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">📊 Completed Tasks Trend</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
                                 <canvas id="areaChart"></canvas>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">📊 Bar Chart</div>
-                            <div class="card-body">
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">📊 Monthly Revisits</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
                                 <canvas id="barChart"></canvas>
                             </div>
                         </div>
@@ -170,7 +257,12 @@ $revisit_count = mysqli_fetch_assoc(mysqli_query($conn, $revisit_count_query))['
                 <?php
                 if ($mechanic_result && mysqli_num_rows($mechanic_result) > 0) {
                     while ($mechanic = mysqli_fetch_assoc($mechanic_result)) {
-                        echo '<li class="list-group-item"><a href="homemechanic.php?mechanic_id=' . $mechanic['mechanic_id'] . '">' . $mechanic['firstname'] . ' ' . $mechanic['lastname'] . '</a></li>';
+                        echo '<li class="list-group-item">
+                            <a href="homemechanic.php?mechanic_id=' . htmlspecialchars($mechanic['mechanic_id']) . '" 
+                               class="text-decoration-none text-dark">
+                                ' . htmlspecialchars($mechanic['firstname'] . ' ' . $mechanic['lastname']) . '
+                            </a>
+                        </li>';
                     }
                 } else {
                     echo '<li class="list-group-item">No mechanics found</li>';
@@ -178,37 +270,121 @@ $revisit_count = mysqli_fetch_assoc(mysqli_query($conn, $revisit_count_query))['
                 ?>
             </ul>
         </div>
+    </div>
 
-        <script>
-            var ctx1 = document.getElementById('areaChart').getContext('2d');
-            var areaChart = new Chart(ctx1, {
-                type: 'line',
-                data: {
-                    labels: ['Mar 1', 'Mar 3', 'Mar 5', 'Mar 7', 'Mar 9', 'Mar 11', 'Mar 13'],
-                    datasets: [{
-                        label: 'Sales',
-                        data: [10000, 30000, 25000, 20000, 28000, 32000, 40000],
-                        borderColor: 'blue',
-                        fill: true,
-                        backgroundColor: 'rgba(0, 123, 255, 0.2)'
-                    }]
+    <script>
+        // Area Chart for Completed Tasks
+        var ctx1 = document.getElementById('areaChart').getContext('2d');
+        var areaChart = new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: <?php echo $completed_dates_json; ?>,
+                datasets: [{
+                    label: 'Completed Tasks',
+                    data: <?php echo $completed_counts_json; ?>,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Completed Tasks (Last 7 Days)',
+                        font: { size: 14 }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
                 },
-                options: { responsive: true }
-            });
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            font: { size: 12 }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: { size: 12 }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
 
-            var ctx2 = document.getElementById('barChart').getContext('2d');
-            var barChart = new Chart(ctx2, {
-                type: 'bar',
-                data: {
-                    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-                    datasets: [{
-                        label: 'Revenue',
-                        data: [3000, 4000, 5000, 7000, 9000, 15000],
-                        backgroundColor: 'blue'
-                    }]
+        // Bar Chart for Monthly Revisits
+        var ctx2 = document.getElementById('barChart').getContext('2d');
+        var barChart = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: <?php echo $revisit_months_json; ?>,
+                datasets: [{
+                    label: 'Revisits',
+                    data: <?php echo $revisit_counts_json; ?>,
+                    backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    borderWidth: 1,
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Monthly Revisits (Last 6 Months)',
+                        font: { size: 14 }
+                    },
+                    legend: {
+                        position: 'top'
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                    }
                 },
-                options: { responsive: true }
-            });
-        </script>
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            font: { size: 12 }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: { size: 12 }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

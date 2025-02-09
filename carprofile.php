@@ -53,25 +53,23 @@
         die('Car ID or company name not specified.');
     }
 
-    // for saving data to service table
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Retrieve user information from the session
         $user_id = $_SESSION['user_id'];
-
+    
         // Retrieve car_id from the form data
         $car_id = isset($_POST['car_id']) ? $_POST['car_id'] : null;
-
+    
         // Validate and sanitize car_id
         $car_id = filter_var($car_id, FILTER_VALIDATE_INT);
-
+    
         if ($car_id === false || $car_id === null) {
             die('Invalid car ID.');
         }
-
-
+    
         // Perform the insertion into the service table
-        $sql = "INSERT INTO service (user_id, eo, elp, ep, battery, light, oil, water, brake, air, gas, tire, car_id, companyid) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO service (user_id, eo, elp, ep, battery, light, oil, water, brake, air, gas, tire, car_id, companyid, date_created) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param(
             "ssssssssssssss",
@@ -90,27 +88,26 @@
             $car_id,
             $companyid
         );
-
-
+    
         $stmt->execute();
         $stmt->close();
-
+    
         // Update companyid in the user table
         $update_user_sql = "UPDATE user SET companyid = ? WHERE id = ?";
         $update_user_stmt = $conn->prepare($update_user_sql);
         $update_user_stmt->bind_param("ss", $companyid, $user_id);
         $update_user_stmt->execute();
         $update_user_stmt->close();
-
+    
         // Update companyid in the car table
         $update_car_sql = "UPDATE car SET companyid = ? WHERE car_id = ?";
         $update_car_stmt = $conn->prepare($update_car_sql);
         $update_car_stmt->bind_param("ss", $companyid, $car_id);
         $update_car_stmt->execute();
         $update_car_stmt->close();
-
+    
         echo '<script>alert("Done submit");</script>';
-
+    
         // Redirect back to carusers.php
         echo '<script>window.location.href = "home.php";</script>';
         exit();

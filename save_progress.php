@@ -27,8 +27,8 @@ if (isset($_POST['user_id']) && isset($_POST['car_id']) && isset($_POST['progres
         if (strpos($existingProgressing, $progressing) === false) {
             $newProgressing = $existingProgressing . ', ' . $progressing;
 
-            // Update the row: Set the progressing column to the appended value, and update progress_percentage to the new value
-            $updateQuery = "UPDATE accomplishtask SET progress_percentage = ?, progressing = ?, progressingpercentage = ? WHERE user_id = ? AND car_id = ? AND mechanic_id = ? AND nameprogress = ?";
+            // Update the row with timestamp
+            $updateQuery = "UPDATE accomplishtask SET progress_percentage = ?, progressing = ?, progressingpercentage = ?, progress_date = CURRENT_TIMESTAMP WHERE user_id = ? AND car_id = ? AND mechanic_id = ? AND nameprogress = ?";
             $updateStmt = mysqli_prepare($conn, $updateQuery);
             mysqli_stmt_bind_param($updateStmt, 'issiiis', $progress, $newProgressing, $progressingPercentage, $userId, $carId, $mechanicId, $nameProgress);
             mysqli_stmt_execute($updateStmt);
@@ -47,8 +47,8 @@ if (isset($_POST['user_id']) && isset($_POST['car_id']) && isset($_POST['progres
                 mysqli_stmt_fetch($diagnosisStmt);
                 mysqli_stmt_close($diagnosisStmt);
 
-                // Insert into history table
-                $historyQuery = "INSERT INTO history (user_id, car_id, mechanic_id, diagnosis, progress_date) VALUES (?, ?, ?, ?, NOW())";
+                // Insert into history table with timestamp
+                $historyQuery = "INSERT INTO history (user_id, car_id, mechanic_id, diagnosis, progress_date) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)";
                 $historyStmt = mysqli_prepare($conn, $historyQuery);
                 mysqli_stmt_bind_param($historyStmt, 'iiis', $userId, $carId, $mechanicId, $diagnosis);
                 mysqli_stmt_execute($historyStmt);
@@ -79,8 +79,8 @@ if (isset($_POST['user_id']) && isset($_POST['car_id']) && isset($_POST['progres
             echo "This progress for " . htmlspecialchars($progressing) . " already exists in category: " . htmlspecialchars($nameProgress);
         }
     } else {
-        // Insert a new record if none exists
-        $insertQuery = "INSERT INTO accomplishtask (user_id, car_id, progress_percentage, progressing, mechanic_id, progressingpercentage, nameprogress) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // Insert a new record with timestamp
+        $insertQuery = "INSERT INTO accomplishtask (user_id, car_id, progress_percentage, progressing, mechanic_id, progressingpercentage, nameprogress, progress_date) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
         $insertStmt = mysqli_prepare($conn, $insertQuery);
         mysqli_stmt_bind_param($insertStmt, 'iiissis', $userId, $carId, $progress, $progressing, $mechanicId, $progressingPercentage, $nameProgress);
         mysqli_stmt_execute($insertStmt);
@@ -101,8 +101,8 @@ if (isset($_POST['user_id']) && isset($_POST['car_id']) && isset($_POST['progres
 
 // Ensure all progress percentages are checked to accurately reflect completion
 if ($progress === 90) {
-    // Update all related records to mark them as completed
-    $completeQuery = "UPDATE accomplishtask SET progress_percentage = 90 WHERE user_id = ? AND car_id = ? AND mechanic_id = ?";
+    // Update all related records to mark them as completed with new timestamp
+    $completeQuery = "UPDATE accomplishtask SET progress_percentage = 90, progress_date = CURRENT_TIMESTAMP WHERE user_id = ? AND car_id = ? AND mechanic_id = ?";
     $completeStmt = mysqli_prepare($conn, $completeQuery);
     mysqli_stmt_bind_param($completeStmt, 'iii', $userId, $carId, $mechanicId);
     mysqli_stmt_execute($completeStmt);
@@ -115,4 +115,7 @@ if ($progress === 90) {
 
     mysqli_stmt_close($completeStmt);
 }
+
+// Close database connection
+mysqli_close($conn);
 ?>
