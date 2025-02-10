@@ -134,6 +134,40 @@ $completed_dates_json = json_encode(array_keys($last_7_days));
 $completed_counts_json = json_encode(array_values($last_7_days));
 $revisit_months_json = json_encode(array_keys($last_6_months));
 $revisit_counts_json = json_encode(array_values($last_6_months));
+
+// Add this after your existing metrics queries
+$survey_categories_query = "
+    SELECT 
+        category,
+        AVG(rating) as avg_rating,
+        COUNT(*) as total_responses
+    FROM scale 
+    WHERE autoshop_id = '$companyid'
+    GROUP BY category
+";
+
+$categories_result = mysqli_query($conn, $survey_categories_query);
+
+// Initialize arrays for survey data
+$categories = array();
+$ratings = array();
+$total_rating = 0;
+$category_count = 0;
+
+while ($row = mysqli_fetch_assoc($categories_result)) {
+    $categories[] = $row['category'];
+    $ratings[] = round($row['avg_rating'], 2);
+    $total_rating += $row['avg_rating'];
+    $category_count++;
+}
+
+// Calculate overall satisfaction percentage
+$overall_satisfaction = $category_count > 0 ? 
+    round(($total_rating / $category_count) * 20, 0) : 0; // Converting to percentage (0-5 scale to 0-100%)
+
+// Convert to JSON for JavaScript
+$categories_json = json_encode($categories);
+$ratings_json = json_encode($ratings);
 ?>
 
 <!DOCTYPE html>
@@ -146,35 +180,134 @@ $revisit_counts_json = json_encode(array_values($last_6_months));
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { background-color: #f8f9fa; }
+        body { 
+            background-color: #f8f9fa; 
+            padding-top: 60px; /* Add padding to prevent content from going under navbar */
+        }
         .sidebar {
-            width: 250px; height: 100vh; background-color: #343a40;
-            padding-top: 20px; position: fixed;
+            width: 250px; 
+            height: 100vh; 
+            background-color: #343a40;
+            padding-top: 20px; 
+            position: fixed;
+            top: 60px; /* Start below navbar */
+            left: 0;
+            overflow-y: auto;
         }
         .sidebar a {
-            color: white; padding: 10px 20px; display: block; text-decoration: none;
+            color: white; 
+            padding: 10px 20px; 
+            display: block; 
+            text-decoration: none;
         }
-        .sidebar a:hover { background-color: #495057; }
-        .content { margin-left: 270px; padding: 20px; }
+        .sidebar a:hover { 
+            background-color: #495057; 
+        }
+        .content { 
+            margin-left: 270px; 
+            padding: 20px;
+            margin-top: 20px; /* Add some space below navbar */
+        }
         .mechanic-list-container {
-            position: absolute; top: 80px; right: 20px; width: 280px;
-            background: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px; padding: 20px; z-index: 10;
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 280px;
+            background: white;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            z-index: 1000;
         }
-        .mechanic-list { max-height: 300px; overflow-y: auto; padding: 0; }
+        .mechanic-list-container h5 {
+            color: #2c3e50;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .mechanic-list {
+            max-height: calc(100vh - 180px);
+            overflow-y: auto;
+            padding: 0;
+            margin: 0;
+        }
+        .mechanic-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .mechanic-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        .mechanic-list::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
         .mechanic-list .list-group-item {
-            text-align: left; padding: 12px 15px; transition: background 0.3s ease;
-            border-radius: 5px; cursor: pointer;
+            text-align: left;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
         }
-        .mechanic-list .list-group-item:hover { background-color: #f1f1f1; }
-        .card { transition: transform 0.2s; }
-        .card:hover { transform: translateY(-5px); }
-        .chart-container { position: relative; margin: auto; height: 300px; }
+        .mechanic-list .list-group-item:hover {
+            background-color: #e9ecef;
+            transform: translateX(-5px);
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .mechanic-list .list-group-item a {
+            color: #495057;
+            text-decoration: none;
+            display: block;
+            font-weight: 500;
+        }
+        .mechanic-list .list-group-item:last-child {
+            margin-bottom: 0;
+        }
+        /* Add smooth scrollbar for Firefox */
+        .mechanic-list {
+            scrollbar-width: thin;
+            scrollbar-color: #888 #f1f1f1;
+        }
+        .card { 
+            transition: transform 0.2s; 
+        }
+        .card:hover { 
+            transform: translateY(-5px); 
+        }
+        .chart-container { 
+            position: relative; 
+            margin: auto; 
+            height: 300px; 
+        }
+        .navbar {
+            background: linear-gradient(to bottom, #343a40, #23272b) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: white !important;
+            padding: 0.5rem 0;
+        }
+        /* Update the container margin to give space for mechanic list */
+        .container {
+            margin-right: 320px; /* Increased margin to prevent overlap with mechanic list */
+            margin-left: 270px; /* Keep existing left margin for sidebar */
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark px-3">
-        <a class="navbar-brand" href="#">Company Dashboard</a>
+    <nav class="navbar navbar-dark bg-dark px-3 fixed-top">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">Company Dashboard</span>
+        </div>
     </nav>
     <div class="d-flex">
         <div class="sidebar">
@@ -244,6 +377,50 @@ $revisit_counts_json = json_encode(array_values($last_6_months));
                         <div class="card-body">
                             <div class="chart-container">
                                 <canvas id="barChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Customer Satisfaction Survey Results</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="chart-container" style="position: relative; height:300px;">
+                                        <canvas id="surveyChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Category</th>
+                                                    <th>Rating</th>
+                                                    <th>%</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                for ($i = 0; $i < count($categories); $i++) {
+                                                    $percentage = round($ratings[$i] * 20, 0); // Convert to percentage
+                                                    echo "<tr>
+                                                        <td>{$categories[$i]}</td>
+                                                        <td>{$ratings[$i]}</td>
+                                                        <td>{$percentage}%</td>
+                                                    </tr>";
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -385,6 +562,69 @@ $revisit_counts_json = json_encode(array_values($last_6_months));
                 }
             }
         });
+
+        // Survey Chart
+        var ctxSurvey = document.getElementById('surveyChart').getContext('2d');
+        var surveyChart = new Chart(ctxSurvey, {
+            type: 'doughnut',
+            data: {
+                labels: <?php echo $categories_json; ?>,
+                datasets: [{
+                    data: <?php echo $ratings_json; ?>,
+                    backgroundColor: [
+                        'rgba(153, 102, 255, 0.8)', // Purple for Tangibles
+                        'rgba(54, 162, 235, 0.8)',  // Blue for Reliability
+                        'rgba(255, 206, 86, 0.8)',  // Yellow for Empathy
+                        'rgba(255, 99, 132, 0.8)',  // Pink for Responsiveness
+                        'rgba(75, 192, 192, 0.8)'   // Turquoise for Assurance
+                    ],
+                    borderWidth: 1,
+                    borderColor: 'white'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            font: {
+                                size: 14
+                            },
+                            padding: 20
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: '<?php echo $overall_satisfaction; ?>%',
+                        padding: {
+                            top: 10,
+                            bottom: 0
+                        },
+                        font: {
+                            size: 24,
+                            weight: 'bold'
+                        }
+                    },
+                    subtitle: {
+                        display: true,
+                        text: 'Overall Satisfaction',
+                        padding: {
+                            top: 0,
+                            bottom: 10
+                        },
+                        font: {
+                            size: 14,
+                            weight: 'normal'
+                        },
+                        color: '#666'
+                    }
+                }
+            }
+        });
     </script>
+
 </body>
 </html>

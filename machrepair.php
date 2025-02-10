@@ -775,9 +775,6 @@ $result = $fetch_stmt->get_result();
     });
     </script>
 
-
-
-
 <script>
 // Function to update progress percentage
 function updateProgress() {

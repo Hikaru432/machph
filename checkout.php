@@ -118,36 +118,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #b30036;">
     <div class="container">
-        <a class="navbar-brand text-white" href="home.php">MachPH Store</a>
+        <a class="navbar-brand text-white" href="shop.php">Shop</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="home.php">Home</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link text-white" href="shop.php">Shop</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Contact</a>
-                </li>
-                <!-- Cart icon -->
-                    <ul class="navbar-nav ml-2">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#" data-toggle="modal" data-target="#cartModal">
-                                <i class="fas fa-shopping-cart"></i> Cart <span class="badge badge-pill badge-light"><?php echo isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0; ?></span>
-                            </a>
-                        </li>
-                    </ul>
-            </ul>
-          <!-- Search Bar -->
-          <form class="form-inline my-2 my-lg-0" method="GET" action="shop.php">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
-                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
+     
     </div>
 </nav>
 

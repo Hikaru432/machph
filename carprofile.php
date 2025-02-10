@@ -122,29 +122,269 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-        <title>Profile</title>
-        <link rel="stylesheet" href="css/carprofile.css">
-
+        <title>Car Profile</title>
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Custom CSS -->
         <style>
+            :root {
+                --primary-color: #b30036;
+                --primary-hover: #8b002a;
+                --secondary-color: #f8f9fa;
+                --text-dark: #2c3e50;
+                --text-light: #ffffff;
+                --border-color: #e9ecef;
+                --card-shadow: 0 2px 10px rgba(179, 0, 54, 0.1);
+                --hover-shadow: 0 4px 15px rgba(179, 0, 54, 0.15);
+            }
+
             body {
-                background-color: #f8f9fa;
+                background-color: var(--secondary-color);
+                color: var(--text-dark);
+                font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+                line-height: 1.6;
+            }
+
+            .navbar {
+                background-color: #b30036 !important;
+                box-shadow: var(--card-shadow);
+            }
+
+            .navbar-brand, .nav-link {
+                color: var(--text-light) !important;
+            }
+
+            .nav-link:hover {
+                opacity: 0.9;
+            }
+
+            .main-container {
+                display: flex;
+                gap: 2rem;
+                padding: 2rem;
+                max-width: 1440px;
+                margin: 0 auto;
+            }
+
+            .profile-container, .maintenance-container {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .profile-section {
+                background: var(--text-light);
+                border-radius: 15px;
+                box-shadow: var(--card-shadow);
+                padding: 2rem;
+                margin-bottom: 2rem;
+                transition: all 0.3s ease;
+            }
+
+            .profile-image {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                border: 3px solid var(--primary-color);
+                padding: 3px;
+                margin-bottom: 1.5rem;
+                transition: transform 0.3s ease;
+            }
+
+            .profile-image:hover {
+                transform: scale(1.05);
+            }
+
+            .car-info {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+                margin-top: 1.5rem;
+            }
+
+            .info-card {
+                background: var(--secondary-color);
+                padding: 1.25rem;
+                border-radius: 10px;
+                border: 1px solid var(--border-color);
+                transition: all 0.3s ease;
+            }
+
+            .info-card:hover {
+                border-color: #b30036;
+                transform: translateY(-3px);
+                box-shadow: var(--hover-shadow);
+            }
+
+            .maintenance-section {
+                background: var(--text-light);
+                border-radius: 15px;
+                padding: 2rem;
+                box-shadow: var(--card-shadow);
+            }
+
+            .checkbox-group {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1rem;
+                margin: 1.5rem 0;
+            }
+
+            .custom-checkbox {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                padding: 1rem;
+                background: var(--secondary-color);
+                border-radius: 10px;
+                border: 1px solid var(--border-color);
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+
+            .custom-checkbox:hover {
+                border-color: #b30036;
+                transform: translateY(-2px);
+                box-shadow: var(--card-shadow);
+            }
+
+            .range-slider {
+                background: var(--secondary-color);
+                padding: 1.25rem;
+                border-radius: 10px;
+                margin: 1rem 0;
+                border: 1px solid var(--border-color);
+                transition: all 0.2s ease;
+            }
+
+            .range-slider:hover {
+                border-color: #b30036;
+                box-shadow: var(--card-shadow);
+            }
+
+            .range-slider input[type="range"] {
+                width: 60%;
+                height: 6px;
+                border-radius: 5px;
+                background: #dee2e6;
+            }
+
+            .range-slider input[type="range"]::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 18px;
+                height: 18px;
+                background: #b30036;
+                border-radius: 50%;
+                cursor: pointer;
+                border: 2px solid var(--text-light);
+                transition: all 0.2s ease;
+            }
+
+            .range-slider input[type="range"]::-webkit-slider-thumb:hover {
+                transform: scale(1.1);
+            }
+
+            .badge {
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-weight: 500;
+                transition: all 0.2s ease;
+            }
+
+            .badge.bg-primary {
+                background-color: #b30036 !important;
+            }
+
+            .btn-custom, .btn-booking {
+                background-color: #b30036;
+                color: var(--text-light);
+                padding: 0.75rem 2rem;
+                border-radius: 25px;
+                border: none;
+                transition: all 0.3s ease;
+            }
+
+            .btn-custom:hover, .btn-booking:hover {
+                background-color: #8b002a;
+                color: var(--text-light);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(179, 0, 54, 0.2);
+            }
+
+            /* Modal Styling */
+            .modal-content {
+                border-radius: 15px;
+                border: none;
+                box-shadow: var(--hover-shadow);
+            }
+
+            .modal-header {
+                background-color: #b30036;
+                color: var(--text-light);
+                border-radius: 15px 15px 0 0;
+                padding: 1.5rem;
+            }
+
+            .modal-body {
+                padding: 2rem;
+            }
+
+            .form-select {
+                border-radius: 8px;
+                padding: 0.75rem;
+                border: 1px solid var(--border-color);
+                transition: all 0.2s ease;
+            }
+
+            .form-select:focus {
+                border-color: #b30036;
+                box-shadow: 0 0 0 2px rgba(179, 0, 54, 0.1);
+            }
+
+            /* Section Headers */
+            h3 {
+                color: #b30036;
+                font-weight: 600;
+                margin-bottom: 1.5rem;
+                position: relative;
+                padding-bottom: 0.5rem;
+            }
+
+            h3::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 50px;
+                height: 3px;
+                background-color: #b30036;
+                border-radius: 3px;
+            }
+
+            /* Responsive Design */
+            @media (max-width: 992px) {
+                .main-container {
+                    flex-direction: column;
                 }
 
-                .navbar {
-                    background-color: #b30036 !important;
+                .car-info {
+                    grid-template-columns: 1fr;
                 }
+            }
 
-                .navbar-brand,
-                .nav-link {
-                    color: white !important;
-                }
-                
-                .fonts-size {
-                    font-size: 16px;
-                    font-weight: 600;
-                }
+            /* Smooth Animations */
+            .fade-in {
+                animation: fadeIn 0.5s ease-in;
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            .table th {
+                background-color: #b30036 !important;
+                color: white;
+            }
         </style>
     </head>
     <body>
@@ -166,93 +406,216 @@
             </div>
         </nav>  
     
-    <!-- Sectioning -->
-    <section class="carprofile-section-1" style="width: 800px; left: 5px; top: 57px; height: 1500px;">
-    <div class="container car-profile-container my-5">
-        <div class="text-center car-profile">
-            <?php
-                if (empty($fetch['image'])) {
-                    echo '<img src="images/default-avatar.png" alt="Default Avatar" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px;">';
-                } else {
-                    // Display the BLOB image using image.php script
-                    echo '<img src="image.php?id=' . $fetch['id'] . '" alt="User Image" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px;">';
-                }
-            ?>
-            <h1 class="font-weight-bold text-primary"><?php echo $fetch['name']; ?></h1>
-        </div>
-    </div>
-
-            <div class="car-info">
-                <!-- Display car information -->
-                <div class="fullname-container-carprofile-1">
-                    <h4 class="carprofile-container-1"><strong>Plate No:</strong><p class="profile-box"><?php echo $car_data['plateno']; ?></p></h4>
-                    <h4 class="carprofile-container-2"><strong>Manufacturer:</strong><p class="profile-box"><?php echo $car_data['manuname']; ?></p></h4>
-                    <h4 class="carprofile-container-3"><strong>Car Model:</strong><p class="profile-box"><?php echo $car_data['carmodel']; ?></p></h4>
-                    <h4 class="carprofile-container-4"><strong>Year:</strong><p class="profile-box"><?php echo $car_data['year']; ?></p></h4>
-                    <h4 class="carprofile-container-5"><strong>Body no:</strong><p class="profile-box"><?php echo $car_data['bodyno']; ?></p></h4>
-                    <h4 class="carprofile-container-6"><strong>Engine cc:</strong><p class="profile-box"><?php echo $car_data['enginecc']; ?></p></h4>
-                    <h4 class="carprofile-container-7"><strong>Color:</strong><p class="profile-box"><?php echo $car_data['color']; ?></p></h4>
-                    <h4 class="carprofile-container-7"><strong>Gas:</strong><p class="profile-box"><?php echo $car_data['gas']; ?></p></h4>
+    <div class="main-container">
+        <!-- Left side - Profile Section -->
+        <div class="profile-container">
+            <div class="profile-section">
+                <?php
+                    if (empty($fetch['image'])) {
+                        echo '<img src="images/default-avatar.png" alt="Default Avatar" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">';
+                    } else {
+                        echo '<img src="image.php?id=' . $fetch['id'] . '" alt="User Image" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">';
+                    }
+                ?>
+                <h2 class="fw-bold text-primary mb-4"><?php echo $fetch['name']; ?></h2>
+                
+                <div class="car-info">
+                    <div class="info-card">
+                        <h6 class="text-muted mb-1">Plate No</h6>
+                        <p class="fw-bold mb-0"><?php echo $car_data['plateno']; ?></p>
+                    </div>
+                    <div class="info-card">
+                        <h6 class="text-muted mb-1">Manufacturer</h6>
+                        <p class="fw-bold mb-0"><?php echo $car_data['manuname']; ?></p>
+                    </div>
+                    <div class="info-card">
+                        <h6 class="text-muted mb-1">Car Model</h6>
+                        <p class="fw-bold mb-0"><?php echo $car_data['carmodel']; ?></p>
+                    </div>
+                    <div class="info-card">
+                        <h6 class="text-muted mb-1">Year</h6>
+                        <p class="fw-bold mb-0"><?php echo $car_data['year']; ?></p>
+                    </div>
+                    <div class="info-card">
+                        <h6 class="text-muted mb-1">Body no</h6>
+                        <p class="fw-bold mb-0"><?php echo $car_data['bodyno']; ?></p>
+                    </div>
+                    <div class="info-card">
+                        <h6 class="text-muted mb-1">Engine cc</h6>
+                        <p class="fw-bold mb-0"><?php echo $car_data['enginecc']; ?></p>
+                    </div>
+                    <div class="info-card">
+                        <h6 class="text-muted mb-1">Color</h6>
+                        <p class="fw-bold mb-0"><?php echo $car_data['color']; ?></p>
+                    </div>
+                    <div class="info-card">
+                        <h6 class="text-muted mb-1">Gas</h6>
+                        <p class="fw-bold mb-0"><?php echo $car_data['gas']; ?></p>
+                    </div>
                 </div>
             </div>
 
-                <!-- For Booking container -->
+            <!-- Booking button and modal -->
+            <div class="text-center">
+                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bookingModal">Booking</a>
+            </div>
 
-                <div style="position: relative; margin-left: 20px; margin-top: 50px;">
-                    <div>
-                    <!-- <h2 class="text-xl font-bold">Bookings</h2> -->
-                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bookingModal">Booking</a>
-
-                    <!-- Booking Modal -->
-                    
-                    <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="bookingModalLabel">Book a Date</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- Hidden input to hold the companyname for the booking -->
-                                    <input type="hidden" id="companyname" value="<?php echo htmlspecialchars($companyname); ?>">
-
-                                    <!-- Car selection dropdown -->
-                                    <label for="carSelect">Select Your Car:</label>
-                                    <select id="carSelect" class="form-select mb-3">
-                                        <option value="">-- Choose a Car --</option>
-                                        <?php
-                                        // Fetch cars for the logged-in user
-                                        $car_query = "SELECT * FROM car WHERE user_id = '$user_id'";
-                                        $car_result = mysqli_query($conn, $car_query);
-                                        while ($car = mysqli_fetch_assoc($car_result)) {
-                                            echo "<option value='{$car['car_id']}'>{$car['carmodel']} - {$car['plateno']}</option>";
-                                        }
-                                        ?>
-                                    </select>
-
-                                    <div id="calendar" style="display: none;"></div>
-
-                                    <table class="table mt-3" id="bookingTable">
-                                        <thead>
-                                            <tr>
-                                                <th>User Name</th>
-                                                <th>Car Model</th>
-                                                <th>Date</th>
-                                                <th>Bookings</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- Booked dates will be populated here -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                </div>
+                <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="bookingModalLabel">Book a Date</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="companyname" value="<?php echo htmlspecialchars($companyname); ?>">
+
+                                <label for="carSelect">Select Your Car:</label>
+                                <select id="carSelect" class="form-select mb-3">
+                                    <option value="">-- Choose a Car --</option>
+                                    <?php
+                                    $car_query = "SELECT * FROM car WHERE user_id = '$user_id'";
+                                    $car_result = mysqli_query($conn, $car_query);
+                                    while ($car = mysqli_fetch_assoc($car_result)) {
+                                        echo "<option value='{$car['car_id']}'>{$car['carmodel']} - {$car['plateno']}</option>";
+                                    }
+                                    ?>
+                                </select>
+
+                            <div id="calendar" style="display: none;"></div>
+
+                            <table class="table mt-3" id="bookingTable">
+                                <thead>
+                                    <tr>
+                                        <th>User Name</th>
+                                        <th>Car Model</th>
+                                        <th>Date</th>
+                                        <th>Bookings</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- Right side - Maintenance Section -->
+        <div class="maintenance-container">
+            <div class="maintenance-section">
+                <form method="post" action="">
+                    <h3 class="mb-4">Primary Engine System</h3>
+                    <div class="checkbox-group">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="eo" value="1">
+                            Mechanical Issues
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="elp" value="2">
+                            Fuel and Air intake System
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="ep" value="3">
+                            Cooling and Lubrication
+                        </label>
+                    </div>
+
+                <h3 class="mt-5 mb-4">Maintenance Status</h3>
+                <div class="range-slider">
+                    <label class="d-flex justify-content-between align-items-center">
+                        <span>Battery</span>
+                        <div class="d-flex align-items-center gap-3">
+                            <input type="range" name="battery" min="1" max="3" step="1" value="1" 
+                                   oninput="updateLabel(this, 'batteryLabel')">
+                            <span id="batteryLabel" class="badge bg-primary">Normal</span>
+                        </div>
+                    </label>
+                </div>
+                <div class="range-slider">
+                    <label class="d-flex justify-content-between align-items-center">
+                        <span>Light</span>
+                        <div class="d-flex align-items-center gap-3">
+                            <input type="range" name="light" min="1" max="3" step="1" value="1" 
+                                   oninput="updateLabel(this, 'lightLabel')">
+                            <span id="lightLabel" class="badge bg-primary">Normal</span>
+                        </div>
+                    </label>
+                </div>
+                <div class="range-slider">
+                    <label class="d-flex justify-content-between align-items-center">
+                        <span>Oil</span>
+                        <div class="d-flex align-items-center gap-3">
+                            <input type="range" name="oil" min="1" max="3" step="1" value="1" 
+                                   oninput="updateLabel(this, 'oilLabel')">
+                            <span id="oilLabel" class="badge bg-primary">Normal</span>
+                        </div>
+                    </label>
+                </div>
+                <div class="range-slider">
+                    <label class="d-flex justify-content-between align-items-center">
+                        <span>Water</span>
+                        <div class="d-flex align-items-center gap-3">
+                            <input type="range" name="water" min="1" max="3" step="1" value="1" 
+                                   oninput="updateLabel(this, 'waterLabel')">
+                            <span id="waterLabel" class="badge bg-primary">Normal</span>
+                        </div>
+                    </label>
+                </div>
+                <div class="range-slider">
+                    <label class="d-flex justify-content-between align-items-center">
+                        <span>Brake</span>
+                        <div class="d-flex align-items-center gap-3">
+                            <input type="range" name="brake" min="1" max="3" step="1" value="1" 
+                                   oninput="updateLabel(this, 'brakeLabel')">
+                            <span id="brakeLabel" class="badge bg-primary">Normal</span>
+                        </div>
+                    </label>
+                </div>
+                <div class="range-slider">
+                    <label class="d-flex justify-content-between align-items-center">
+                        <span>Air</span>
+                        <div class="d-flex align-items-center gap-3">
+                            <input type="range" name="air" min="1" max="3" step="1" value="1" 
+                                   oninput="updateLabel(this, 'airLabel')">
+                            <span id="airLabel" class="badge bg-primary">Normal</span>
+                        </div>
+                    </label>
+                </div>
+                <div class="range-slider">
+                    <label class="d-flex justify-content-between align-items-center">
+                        <span>Gas</span>
+                        <div class="d-flex align-items-center gap-3">
+                            <input type="range" name="gas" min="1" max="3" step="1" value="1" 
+                                   oninput="updateLabel(this, 'gasLabel')">
+                            <span id="gasLabel" class="badge bg-primary">Normal</span>
+                        </div>
+                    </label>
+                </div>
+                <div class="range-slider">
+                    <label class="d-flex justify-content-between align-items-center">
+                        <span>Tire</span>
+                        <div class="d-flex align-items-center gap-3">
+                            <input type="range" name="tire" min="1" max="3" step="1" value="1" 
+                                   oninput="updateLabel(this, 'tireLabel')">
+                            <span id="tireLabel" class="badge bg-primary">Normal</span>
+                        </div>
+                    </label>
+                </div>
+
+                    <div class="text-center mt-5">
+                        <input type="hidden" name="car_id" value="<?php echo $car_id; ?>">
+                        <input type="hidden" name="companyid" value="<?php echo $autoshop_data['companyid']; ?>">
+                        <button type="submit" class="btn btn-booking">Submit Maintenance Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Include required JavaScript files -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -260,205 +623,97 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
 
-                    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-                    <!-- For booking -->
+    <script>
+    $(document).ready(function() {
+        $("#calendar").datepicker({
+            dateFormat: 'yy-mm-dd',
+            onSelect: function(dateText) {
+                const selectedCarId = $('#carSelect').val();
+                const companyid = $('#companyid').val();
 
-                    <script>
-                    $(document).ready(function() {
-                        // Initialize the calendar but keep it hidden
-                        $("#calendar").datepicker({
-                            dateFormat: 'yy-mm-dd',
-                            onSelect: function(dateText) {
-                                // AJAX request to store the booking
-                                const selectedCarId = $('#carSelect').val();
-                                const companyid = $('#companyid').val(); // Fetch the companyid from the hidden input
+                if (!selectedCarId) {
+                    alert("Please select a car first.");
+                    return;
+                }
 
-                                if (!selectedCarId) {
-                                    alert("Please select a car first.");
-                                    return;
-                                }
-
-                                $.ajax({
-                                url: 'book_date.php',
-                                method: 'POST',
-                                data: { 
-                                    date: dateText, 
-                                    user_id: <?php echo $user_id; ?>, 
-                                    car_id: selectedCarId,
-                                    companyname: '<?php echo $companyname; ?>' // Use companyname from the session
-                                },
-                                success: function(response) {
-                                    alert(response);
-                                    loadBookings(selectedCarId); // Pass car_id to loadBookings
-                                }
-                            });
-                            }
-                        });
-
-                        // Show/hide the calendar based on car selection
-                        $('#carSelect').change(function() {
-                            if ($(this).val()) {
-                                $("#calendar").show(); // Show the calendar when a car is selected
-                                loadBookings($(this).val()); // Load bookings for the selected car
-                            } else {
-                                $("#calendar").hide(); // Hide the calendar when no car is selected
-                                $('#bookingTable tbody').empty(); // Clear bookings when no car is selected
-                            }
-                        });
-
-                        // Fetch and display bookings for the selected car
-                        function loadBookings(carId) {
-                            $.ajax({
-                                url: 'fetch_bookings.php',
-                                method: 'GET',
-                                data: { 
-                                    user_id: <?php echo $user_id; ?>, 
-                                    car_id: carId 
-                                }, // Include car_id
-                                success: function(data) {
-                                    $('#bookingTable tbody').html(data);
-                                }
-                            });
-                        }
-
-                        // Initial load of bookings (no car selected)
-                        $('#carSelect').trigger('change'); // Trigger change to load bookings for the initially selected car if any
-                    });
-
-
-                    </script>
-                    
-                    </div>
-                </div>
-
-            <div>
-
-        </section>
-
-
-
-    <!-- For section 2 -->
-
-        <section class="carprofile-section-2" style="left: 800px; width: 1100px; top: 57px;  height: 1500px;">
-        <div class="major-maintenance-container" style="margin-left: 300px;">
-            <form method="post" action="">  
-                <br>
-                <br>
-                <br>
-                <br>
-                <div class="data-major-container">
-                <h1 style="font-size: 40px;"><strong>Primary Engine System</strong></h1>
-                <br>
-                    <label class="fonts-size" for="eo">Mechanical Issues <input class="data-major-major-boxes" type="checkbox" name="eo" value="1"></label>
-                    <label class="fonts-size" for="elp">Fuel and Air intake System  <input class="data-major-major-boxes" type="checkbox" name="elp" value="2"></label>
-                    <label class="fonts-size" for="ep">Cooling and Lubrication <input class="data-major-major-boxes" type="checkbox" name="ep" value="3"></label>
-
-                </div>
-                <br>
-                <br>
-                <h1 style="font-size: 40px;"><strong>Maintenance</strong></h1>
-                <br>
-            <div class="data-maintenance-container">
-            <div class="maintenance-range-alignment"></div>
-                <div class="battery-check-box fonts-size">
-                    <label for="battery">Battery</label>
-                    <input type="range" name="battery" min="1" max="3" step="1" value="1" oninput="updateLabel(this, 'batteryLabel')">
-                    <span class="box-range" id="batteryLabel">Normal</span>
-                </div>
-                <br>
-                <div class="battery-check-box fonts-size">
-                    <label for="light">Light</label>
-                    <input class="box-1" type="range" name="light" min="1" max="3" step="1" value="1" oninput="updateLabel(this, 'lightLabel')">
-                    <span  class="box-range box-1" id="lightLabel">Normal</span>
-                </div>
-                <br>
-                <div class="battery-check-box fonts-size">
-                    <label for="oil">Oil</label>
-                    <input  class="box-2" type="range" name="oil" min="1" max="3" step="1" value="1" oninput="updateLabel(this, 'oilLabel')">
-                    <span  class="box-range" id="oilLabel">Normal</span>
-                </div>
-                <br>
-                <div class="battery-check-box fonts-size">
-                    <label for="water">Water</label>
-                    <input  class="box-3" type="range" name="water" min="1" max="3" step="1" value="1" oninput="updateLabel(this, 'waterLabel')">
-                    <span  class="box-range" id="waterLabel">Normal</span>
-                </div>
-                <br>
-                <div class="battery-check-box fonts-size">
-                    <label for="brake">Brake</label>
-                    <input  class="box-4" type="range" name="brake" min="1" max="3" step="1" value="1" oninput="updateLabel(this, 'brakeLabel')">
-                    <span  class="box-range" id="brakeLabel">Normal</span>
-                </div>
-                <br>
-                <div class="battery-check-box fonts-size">
-                    <label for="air">Air</label>
-                    <input  class="box-5" type="range" name="air" min="1" max="3" step="1" value="1" oninput="updateLabel(this, 'airLabel')">
-                    <span  class="box-range" id="airLabel">Normal</span>
-                </div>
-                <br>
-                <div class="battery-check-box fonts-size">
-                    <label for="gas">Gas</label>
-                    <input  class="box-6" type="range" name="gas" min="1" max="3" step="1" value="1" oninput="updateLabel(this, 'gasLabel')">
-                    <span  class="box-range" id="gasLabel">Normal</span>
-                </div>
-                <br>
-                <div class="battery-check-box fonts-size">
-                    <label for="tire">Tire</label>
-                    <input  class="box-7" type="range" name="tire" min="1" max="3" step="1" value="1" oninput="updateLabel(this, 'tireLabel')">
-                    <span  class="box-range" id="tireLabel">Normal</span>
-                </div>
-                <br>
-                <br>
-                <input type="hidden" name="car_id" value="<?php echo $car_id; ?>">
-                <input type="hidden" name="companyid" value="<?php echo $autoshop_data['companyid']; ?>">
-                <button type="submit" style="margin-left: 500px;">Submit</button>
-            </div> 
-
-
-                </div>
-            </form>
-        </div>
-
-        
-            
-        </section>
-    
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-            crossorigin="anonymous"></script>
-        <script src="nav.js"></script>
-        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-        <script>
-        function updateLabel(input, labelId) {
-            var label = document.getElementById(labelId);
-
-            switch (input.value) {
-                case '1':
-                    label.textContent = 'Normal';
-                    break;
-                case '2':
-                    label.textContent = 'Above normal';
-                    break;
-                case '3':
-                    label.textContent = 'Repair';
-                    break;
+                $.ajax({
+                url: 'book_date.php',
+                method: 'POST',
+                data: { 
+                    date: dateText, 
+                    user_id: <?php echo $user_id; ?>, 
+                    car_id: selectedCarId,
+                    companyname: '<?php echo $companyname; ?>'
+                },
+                success: function(response) {
+                    alert(response);
+                    loadBookings(selectedCarId);
+                }
+            });
             }
+        });
+
+        $('#carSelect').change(function() {
+            if ($(this).val()) {
+                $("#calendar").show();
+                loadBookings($(this).val());
+            } else {
+                $("#calendar").hide();
+                $('#bookingTable tbody').empty();
+            }
+        });
+
+        function loadBookings(carId) {
+            $.ajax({
+                url: 'fetch_bookings.php',
+                method: 'GET',
+                data: { 
+                    user_id: <?php echo $user_id; ?>, 
+                    car_id: carId 
+                },
+                success: function(data) {
+                    $('#bookingTable tbody').html(data);
+                }
+            });
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            updateLabel(document.querySelector('input[name="battery"]'), 'batteryLabel');
-            updateLabel(document.querySelector('input[name="light"]'), 'lightLabel');
-            updateLabel(document.querySelector('input[name="oil"]'), 'oilLabel');
-            updateLabel(document.querySelector('input[name="water"]'), 'waterLabel');
-            updateLabel(document.querySelector('input[name="brake"]'), 'brakeLabel');
-            updateLabel(document.querySelector('input[name="air"]'), 'airLabel');
-            updateLabel(document.querySelector('input[name="gas"]'), 'gasLabel');
-            updateLabel(document.querySelector('input[name="tire"]'), 'tireLabel');
-        });
+        $('#carSelect').trigger('change');
+    });
+
+
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="nav.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>
+    function updateLabel(input, labelId) {
+        var label = document.getElementById(labelId);
+
+        switch (input.value) {
+            case '1':
+                label.textContent = 'Normal';
+                break;
+            case '2':
+                label.textContent = 'Above normal';
+                break;
+            case '3':
+                label.textContent = 'Repair';
+                break;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        updateLabel(document.querySelector('input[name="battery"]'), 'batteryLabel');
+        updateLabel(document.querySelector('input[name="light"]'), 'lightLabel');
+        updateLabel(document.querySelector('input[name="oil"]'), 'oilLabel');
+        updateLabel(document.querySelector('input[name="water"]'), 'waterLabel');
+        updateLabel(document.querySelector('input[name="brake"]'), 'brakeLabel');
+        updateLabel(document.querySelector('input[name="air"]'), 'airLabel');
+        updateLabel(document.querySelector('input[name="gas"]'), 'gasLabel');
+        updateLabel(document.querySelector('input[name="tire"]'), 'tireLabel');
+    });
     </script>
 
     

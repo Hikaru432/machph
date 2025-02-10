@@ -456,33 +456,213 @@ if (!$result) {
 </script>
 
 <style>
-    /* Basic styling for the modal */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1050;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
+    :root {
+        --primary-color: #b30036;
+        --primary-hover: #8b002a;
+        --secondary-color: #f8f9fa;
+        --text-dark: #2c3e50;
+        --text-light: #ffffff;
+        --border-color: #e9ecef;
+        --card-shadow: 0 2px 10px rgba(179, 0, 54, 0.1);
+        --hover-shadow: 0 4px 15px rgba(179, 0, 54, 0.15);
+    }
+
+    /* Container Styles */
+    .container {
+        max-width: 1200px;
+        padding: 2rem;
+        margin-top: 2rem;
+    }
+
+    /* Enhanced Card & Table Container */
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s ease;
+        background: var(--text-light);
         overflow: hidden;
-        background-color: rgba(0, 0, 0, 0.5);
+        margin-bottom: 2rem;
     }
-    .modal-dialog {
-        position: relative;
-        margin: auto;
-        top: 20%;
-        width: 50%;
+
+    .card:hover {
+        box-shadow: var(--hover-shadow);
     }
-    .modal-content {
-        background-color: #fff;
-        border-radius: 5px;
-        padding: 15px;
+
+    .card-header {
+        background: var(--text-light);
+        border-bottom: 2px solid var(--border-color);
+        padding: 1.5rem;
     }
-    .modal-header, .modal-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+
+    .card-header h2 {
+        color: var(--primary-color);
+        font-weight: 700;
+        font-size: 1.75rem;
+        margin: 0;
+    }
+
+    /* Enhanced Table Design */
+    .table-responsive {
+        border-radius: 0 0 15px 15px;
+        overflow: hidden;
+    }
+
+    .table {
+        margin: 0;
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .table thead th {
+        background: linear-gradient(135deg, #b30036 0%, #8b002a 100%) !important;
+        color: var(--text-light);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+        padding: 1.2rem 1rem;
+        border: none;
+        vertical-align: middle;
+    }
+
+    .table tbody td {
+        padding: 1.2rem 1rem;
+        vertical-align: middle;
+        border-color: var(--border-color);
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: rgba(179, 0, 54, 0.05);
+    }
+
+    /* Progress Status Styling */
+    .text-info {
+        color: #0dcaf0 !important;
+        font-weight: 600;
+    }
+
+    .text-danger {
+        color: #dc3545 !important;
+        font-weight: 600;
+    }
+
+    .text-warning {
+        color: #ffc107 !important;
+        font-weight: 600;
+    }
+
+    .text-success {
+        color: #198754 !important;
+        font-weight: 600;
+    }
+
+    /* Survey Button Styling */
+    .survey-link {
+        display: inline-block;
+        background: linear-gradient(135deg, #b30036 0%, #8b002a 100%);
+        color: var(--text-light) !important;
+        padding: 0.6rem 1.2rem;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        border: none;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .survey-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(179, 0, 54, 0.2);
+        background: linear-gradient(135deg, #8b002a 0%, #b30036 100%);
+    }
+
+    .survey-icon {
+        margin-right: 0.5rem;
+    }
+
+    /* Progress Link Styling */
+    td a {
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.3s ease;
+        display: inline-block;
+        padding: 0.3rem 0.6rem;
+        border-radius: 15px;
+    }
+
+    td a:hover {
+        background-color: rgba(179, 0, 54, 0.1);
+        transform: translateX(5px);
+    }
+
+    /* Completed Survey Status */
+    .survey-completed {
+        color: #6c757d;
+        font-weight: 600;
+        padding: 0.6rem 1.2rem;
+        border-radius: 25px;
+        background-color: var(--secondary-color);
+        display: inline-block;
+    }
+
+    /* Notification Button */
+    .btn-message {
+        background: linear-gradient(135deg, #b30036 0%, #8b002a 100%);
+        color: var(--text-light);
+        padding: 0.8rem 1.5rem;
+        border-radius: 25px;
+        border: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.9rem;
+    }
+
+    .btn-message:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(179, 0, 54, 0.2);
+        background: linear-gradient(135deg, #8b002a 0%, #b30036 100%);
+    }
+
+    #notificationDot {
+        display: inline-block;
+        margin-left: 0.5rem;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem;
+        }
+
+        .table thead th,
+        .table tbody td {
+            padding: 1rem 0.75rem;
+        }
+
+        .survey-link {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
     }
 </style>
 

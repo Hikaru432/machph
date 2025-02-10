@@ -164,72 +164,91 @@ $problem_parts_mapping = array(
 
 function displaySectionSelect($problem_parts_mapping)
 {
-    echo '<label for="section-select"></label>';
-    echo '<select id="section-select" onchange="navigateToSection()" style="padding: 8px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px;">';
-    echo '<option value="" style="color: #999;">Select Section</option>';
+    echo '<div class="section-select-container">';
+    echo '<label for="section-select" class="block text-sm font-medium text-gray-700 mb-2">Jump to Section</label>';
+    echo '<select id="section-select" onchange="navigateToSection()" class="form-select w-full max-w-xs">';
+    echo '<option value="">Choose a section...</option>';
     foreach ($problem_parts_mapping as $problem => $parts) {
-        echo '<option value="' . $problem . '" style="color: #333;">' . $problem . '</option>';
+        echo '<option value="' . $problem . '">' . $problem . '</option>';
     }
     echo '</select>';
+    echo '</div>';
 }
 
 
 // Function to display problem parts with price and quantity inputs and show real-time receipt
 function displayProblemParts($problem_parts_mapping, $user_id, $car_id)
 {
-    // Display the form
-    echo '<form method="post" action="save_checkbox.php">'; 
-    echo '<input type="hidden" name="user_id" value="' . $user_id . '">';
-    echo '<input type="hidden" name="car_id" value="' . $car_id . '">';
-    echo '<input type="hidden" name="mechanic_id" value="' . $_SESSION['mechanic_id'] . '">';
+    echo '<form method="post" action="save_checkbox.php" class="problem-parts-form">'; 
+    echo '<input type="hidden" name="user_id" value="' . htmlspecialchars($user_id) . '">';
+    echo '<input type="hidden" name="car_id" value="' . htmlspecialchars($car_id) . '">';
+    echo '<input type="hidden" name="mechanic_id" value="' . htmlspecialchars($_SESSION['mechanic_id']) . '">';
 
-    // Display checkboxes for problem parts
     foreach ($problem_parts_mapping as $problem => $parts) {
-        echo '<div id="' . str_replace(' ', '_', $problem) . '" class="for-major-container bg-gray-100 p-4 rounded-md shadow-md mb-4" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">';
-        echo '<h2 class="text-2xl font-bold mb-4">' . $problem . '</h2>';
-        echo '<div class="grid grid-cols-3 gap-4">';
+        $problemId = str_replace(' ', '_', $problem);
+        echo '<div id="' . $problemId . '" class="problem-section mb-8">';
+        echo '<h2 class="text-2xl font-bold mb-4 bg-gray-100 p-3 rounded-lg">' . htmlspecialchars($problem) . '</h2>';
+        echo '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">';
+        
         foreach ($parts as $part => $subparts) {
-            echo '<div>'; // Start a new grid item
-            echo '<strong style="margin-bottom: 10px; display: block;">' . $part . '</strong>';
+            echo '<div class="part-category bg-white p-4 rounded-lg shadow-md">'; 
+            echo '<h3 class="font-semibold text-lg mb-3 text-blue-600">' . htmlspecialchars($part) . '</h3>';
+            echo '<div class="space-y-2">';
+            
             foreach ($subparts as $subpart) {
-                echo '<div style="margin-bottom: 10px;">'; // Start a new row for checkboxes
-                // Include the category in the name attribute for uniqueness
-                echo '<input type="checkbox" class="part-checkbox" id="' . str_replace(' ', '_', $subpart) . '" name="repairrecord[' . $problem . '][]" value="' . $subpart . '" style="margin-right: 5px;">';
-                echo '<label for="' . str_replace(' ', '_', $subpart) . '" style="margin-right: 10px;">' . $subpart . '</label>';
-    
-                // Input field for quantity
-                echo '<input type="number" class="quantity-input" name="quantity[' . $subpart . ']" value="0" min="0" style="width: 60px; margin-right: 5px;">';
-    
-                echo '</div>'; // End row
+                $subpartId = str_replace(' ', '_', $subpart);
+                echo '<div class="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded">';
+                echo '<div class="flex-1">';
+                echo '<label class="inline-flex items-center">';
+                echo '<input type="checkbox" class="part-checkbox form-checkbox h-5 w-5 text-blue-600" 
+                         id="' . $subpartId . '" 
+                         name="repairrecord[' . htmlspecialchars($problem) . '][]" 
+                         value="' . htmlspecialchars($subpart) . '">';
+                echo '<span class="ml-2">' . htmlspecialchars($subpart) . '</span>';
+                echo '</label>';
+                echo '</div>';
+                echo '<input type="number" 
+                       class="quantity-input form-input w-20 text-center" 
+                       name="quantity[' . htmlspecialchars($subpart) . ']" 
+                       value="0" min="0">';
+                echo '</div>';
             }
-            echo '<div style="margin-bottom: 10px;">';
-            echo '<input type="text" name="other_product[' . $problem . '][' . str_replace(' ', '_', $part) . ']" placeholder="Other" style="margin-right: 5px;">';
+
+            // Other product input with improved styling
+            echo '<div class="mt-3">';
+            echo '<input type="text" 
+                   name="other_product[' . htmlspecialchars($problem) . '][' . str_replace(' ', '_', $part) . ']" 
+                   placeholder="Add other item..." 
+                   class="form-input w-full text-sm">';
             echo '</div>';
-            echo '</div>'; // End grid item
+            
+            echo '</div>';
+            echo '</div>';
         }
         echo '</div>';
         echo '</div>';
     }
-    
 
-    
-    // Receipt section
-    echo '<div class="receipt" style="border: 1px solid #ccc; padding: 10px; margin: 10px; max-width: 400px; width: 100%;">';
-    echo '<h3 style="margin-bottom: 10px;">Quotation</h3>';
-    echo '<table id="receipt-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000;">';
-    echo '<tr><th style="border: 1px solid #000; padding: 8px;">Part</th><th style="border: 1px solid #000; padding: 8px;">Quantity</th></tr>';
+    // Enhanced receipt section
+    echo '<div class="fixed top-24 right-4 w-80 bg-white rounded-lg shadow-lg p-4 receipt-container">';
+    echo '<h3 class="text-lg font-semibold mb-3 border-b pb-2">Quotation Summary</h3>';
+    echo '<div class="max-h-96 overflow-y-auto">';
+    echo '<table id="receipt-table" class="w-full">';
+    echo '<thead class="bg-gray-50">';
+    echo '<tr><th class="p-2 text-left">Part</th><th class="p-2 text-right">Qty</th></tr>';
+    echo '</thead>';
+    echo '<tbody class="divide-y"></tbody>';
     echo '</table>';
     echo '</div>';
-
-
-       // Display the form submit button
-    echo '<div class="mt-4" style="margin-left: 50px;">';
-    echo '<button type="submit" name="submit" value="Submit" class="btn btn-primary">Proceed</button>';
-    // echo '<a href="homemechanic.php" class="btn btn-danger">Invalid</a>';
-    echo '<br>';
     echo '</div>';
-    echo '</form>'; 
 
+    // Submit button with better styling
+    echo '<div class="fixed bottom-4 right-4 submit-container">';
+    echo '<button type="submit" name="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-200">
+            Proceed to Validation
+          </button>';
+    echo '</div>';
+    echo '</form>';
 
     echo '<script>';
     echo 'document.addEventListener("DOMContentLoaded", function() {';
@@ -258,7 +277,6 @@ function displayProblemParts($problem_parts_mapping, $user_id, $car_id)
     echo '  document.querySelector("form").submit();';
     echo '}';
     echo '</script>';
-
 }
 ?>
 
@@ -439,10 +457,67 @@ function displayProblemParts($problem_parts_mapping, $user_id, $car_id)
     ?>
 </div>
 
-<button onclick="scrollToTop()" class="scroll-to-top" style="position: fixed; top: 200px; width: 200px; height: 200px; right: 20px; background-color: #007bff; color: #ffffff; border: none; border-radius: 5px; padding: 10px 20px; cursor: pointer; z-index: 9999; opacity: 0; transition: opacity 0.3s ease;">Scroll to Top</button>
+<button onclick="scrollToTop()" id="scrollToTopBtn" class="scroll-to-top">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+    </svg>
+</button>
 
 
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Add event listeners to checkboxes and quantity inputs
+    var checkboxes = document.querySelectorAll(".part-checkbox, .quantity-input");
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener("change", updateReceipt);
+    });
+    
+    // Initial update of receipt
+    updateReceipt();
+});
+
+function updateReceipt() {
+    var table = document.getElementById("receipt-table");
+    var tbody = table.querySelector("tbody");
+    tbody.innerHTML = ""; // Clear existing rows
+    
+    var checkboxes = document.querySelectorAll(".part-checkbox:checked");
+    checkboxes.forEach(function(checkbox) {
+        var row = document.createElement("tr");
+        var partCell = document.createElement("td");
+        var qtyCell = document.createElement("td");
+        
+        partCell.textContent = checkbox.value;
+        var quantityInput = checkbox.closest('.flex').querySelector('.quantity-input');
+        qtyCell.textContent = quantityInput.value;
+        
+        row.appendChild(partCell);
+        row.appendChild(qtyCell);
+        tbody.appendChild(row);
+    });
+}
+
+// Scroll to top functionality
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+// Enhanced scroll button visibility logic
+window.onscroll = function() {
+    var button = document.getElementById('scrollToTopBtn');
+    if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+        button.style.opacity = "1";
+        button.style.visibility = "visible";
+    } else {
+        button.style.opacity = "0";
+        button.style.visibility = "hidden";
+    }
+};
+
+// Section navigation
 function navigateToSection() {
     var selectElement = document.getElementById("section-select");
     var selectedSection = selectElement.value;
@@ -450,31 +525,218 @@ function navigateToSection() {
         var sectionId = selectedSection.replace(/ /g, '_');
         var sectionElement = document.getElementById(sectionId);
         if (sectionElement) {
-            sectionElement.scrollIntoView({ behavior: 'smooth' });
+            sectionElement.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
         }
     }
 }
 </script>
 
-<script>
-// JavaScript code for scrolling to top and showing the button
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth" // For smooth scrolling behavior
-    });
+<style>
+.receipt-container {
+    transition: all 0.3s ease;
+    z-index: 100;
 }
 
-// Show the button when user scrolls down
-window.onscroll = function() {
-    var button = document.querySelector('.scroll-to-top');
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        button.classList.add('show');
-    } else {
-        button.classList.remove('show');
+.form-select {
+    @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500;
+}
+
+.form-checkbox {
+    @apply rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500;
+}
+
+.form-input {
+    @apply rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500;
+}
+
+.problem-section {
+    scroll-margin-top: 6rem;
+}
+
+/* Add smooth scrolling to the whole page */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Enhanced Container Styles */
+.problem-section {
+    scroll-margin-top: 6rem;
+    background: linear-gradient(to right, #ffffff, #f8f9fa);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+}
+
+.problem-section:hover {
+    transform: translateY(-2px);
+}
+
+/* Enhanced Part Category Card */
+.part-category {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+    border: 1px solid #f0f0f0;
+}
+
+.part-category:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    border-color: #e2e8f0;
+}
+
+/* Improved Form Controls */
+.form-checkbox {
+    @apply rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500;
+    transition: all 0.2s ease;
+}
+
+.form-checkbox:checked {
+    animation: checkbox-pop 0.2s ease-in-out;
+}
+
+.quantity-input {
+    @apply rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500;
+    transition: all 0.2s ease;
+}
+
+.quantity-input:focus {
+    transform: scale(1.02);
+}
+
+/* Enhanced Receipt Container */
+.receipt-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.receipt-container:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Improved Table Styles */
+#receipt-table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#receipt-table th {
+    background: #f8fafc;
+    padding: 12px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+#receipt-table td {
+    padding: 10px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* Enhanced Submit Button */
+.submit-container button {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+}
+
+.submit-container button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(37, 99, 235, 0.25);
+}
+
+/* Section Navigation */
+.section-select-container select {
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.section-select-container select:hover {
+    border-color: #cbd5e1;
+}
+
+.section-select-container select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Profile Section Enhancement */
+#container {
+    background: linear-gradient(to right, #f8fafc, #f1f5f9);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin: 1rem 2rem;
+}
+
+#container img {
+    border: 3px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Animations */
+@keyframes checkbox-pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Updated Scroll to Top Button Styling */
+.scroll-to-top {
+    position: fixed;
+    bottom: 100px;
+    right: 120px;
+    width: 40px !important;
+    height: 40px !important;
+    background: #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.scroll-to-top:hover {
+    background: #2563eb;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.scroll-to-top svg {
+    color: white;
+    width: 20px;
+    height: 20px;
+}
+
+/* Ensure proper spacing on mobile devices */
+@media (max-width: 768px) {
+    .scroll-to-top {
+        bottom: 80px;
+        right: 90px;
     }
-};
-</script>
+    
+    /* Adjust the submit container for better mobile layout */
+    .submit-container {
+        padding-right: 20px;
+    }
+}
+</style>
     
 </body>
 </html>

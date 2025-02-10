@@ -111,57 +111,173 @@ if (isset($_GET['system']) && !empty($_GET['system'])) {
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
-        /* Custom Styles */
-        .card {
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            transition: transform 0.2s;
+        /* General Styles */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
+        /* Card Styles */
+        .card {
+            border: none;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+        }
+
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
         }
+
         .card-img-top {
             height: 200px;
             object-fit: cover;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
+            border-radius: 15px 15px 0 0;
         }
-        .navbar-brand {
-            font-weight: 800;
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background-color: #b30036;
+            border: none;
+            border-radius: 25px;
+            padding: 8px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #8c002b;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(179, 0, 54, 0.3);
+        }
+
+        /* Modal Styles */
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .modal-header {
+            border-radius: 15px 15px 0 0;
+            background: linear-gradient(45deg, #b30036, #ff1a1a);
+            color: white;
+        }
+
+        /* Price Tag Style */
+        .price-tag {
+            background-color: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: 600;
+            color: #b30036;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        /* Fixed Container Style */
+        #fixedContainer {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: linear-gradient(45deg, #000000, #333333);
+            box-shadow: -2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #fixedContainer:hover {
+            transform: translateX(-5px);
+        }
+
+        /* Table Styles */
+        .table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table thead th {
+            background-color: #f8f9fa;
+            border-top: none;
+        }
+
+        /* Quantity Input Style */
+        input[type="number"] {
+            border-radius: 20px;
+            border: 2px solid #dee2e6;
+            padding: 8px 15px;
+        }
+
+        /* Updated Navigation Link Hover Effect */
+        .nav-link {
+            position: relative;
+            padding: 8px 15px;
+            color: white !important; /* Force white color */
+        }
+
+        .nav-link:hover {
+            color: rgba(255, 255, 255, 0.9) !important; /* Slightly dimmed white on hover */
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
         }
     </style>
 </head>
 <body>
-<!-- Navigation bar -->
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #b30036;">
+<!-- Navigation bar - Updated with modern design -->
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #b30036; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
     <div class="container">
-        <a class="navbar-brand text-white" href="home.php">Home</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="home.php" style="font-size: 1.5rem; letter-spacing: 1px; color: white;">
+            <i class="fas fa-home mr-2"></i>Home
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Contact</a>
+                    <a class="nav-link text-white" href="#"><i class="fas fa-envelope mr-1"></i>Contact</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="company.php">Company</a>
+                    <a class="nav-link text-white" href="company.php"><i class="fas fa-building mr-1"></i>Company</a>
                 </li>
-
-                <!-- Cart icon -->
-                    <ul class="navbar-nav ml-2">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#" data-toggle="modal" data-target="#cartModal">
-                                <i class="fas fa-shopping-cart"></i> Cart <span class="badge badge-pill badge-light"><?php echo isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0; ?></span>
-                            </a>
-                        </li>
-                    </ul>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#" data-toggle="modal" data-target="#cartModal">
+                        <i class="fas fa-shopping-cart mr-1"></i>Cart 
+                        <span class="badge badge-pill badge-light ml-1"><?php echo isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0; ?></span>
+                    </a>
+                </li>
             </ul>
-          <!-- Search Bar -->
-          <form class="form-inline my-2 my-lg-0" method="GET" action="shop.php">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
-                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+            <!-- Enhanced Search Bar -->
+            <form class="form-inline my-2 my-lg-0" method="GET" action="shop.php">
+                <div class="input-group">
+                    <input class="form-control" type="search" placeholder="Search products..." aria-label="Search" name="search" style="border-radius: 20px 0 0 20px;">
+                    <div class="input-group-append">
+                        <button class="btn btn-light" type="submit" style="border-radius: 0 20px 20px 0;">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

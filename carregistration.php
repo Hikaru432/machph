@@ -120,52 +120,194 @@ if (!$manufacturer_query) {
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <style>
         body {
-            background-color: #f8f9fa;
+            background: #f8f9fa;
             font-family: 'Poppins', sans-serif;
-        }
-        .container {
-            max-width: 750px;
-            margin: 20px auto;
-        }
-        .card {
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        .btn-custom {
-            background: linear-gradient(to right, #8b002a, #c50040);
-            color: white;
-            font-weight: bold;
-            border: none;
-            transition: 0.3s;
-        }
-        .btn-custom:hover {
-            background: linear-gradient(to right, #c50040, #8b002a);
-        }
-       
-        .form-label {
-            font-weight: 600;
             color: #333;
         }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-custom {
+            background: linear-gradient(45deg, #8b002a, #c50040);
+            color: white;
+            font-weight: 600;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-custom:hover {
+            background: linear-gradient(45deg, #c50040, #8b002a);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(197, 0, 64, 0.3);
+            color: white;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #c50040;
+            box-shadow: 0 0 0 0.2rem rgba(197, 0, 64, 0.25);
+        }
+
         .navbar {
-            background-color: black;
-            padding: 10px;
+            background: #b30036 !important;
+            /* padding: 15px; */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 70px
         }
-        .navbar-brand, .nav-link {
+
+        .navbar-brand {
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: white;
+        }
+
+        .navbar .nav-link {
             color: white !important;
-            font-size: 18px;
         }
+
+        .navbar .nav-link:hover {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .alert-info {
+            background: linear-gradient(45deg, #e3f2fd, #bbdefb);
+            color: #0d47a1;
+        }
+
+        /* Hide the addForms section by default */
         #addForms {
             display: none;
-            padding: 20px;
-            border-radius: 12px;
-            background-color: #f1f1f1;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
+
         .btn-secondary {
-            margin-top: 15px;
+            background: #6c757d;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .text-primary {
+            color: #c50040 !important;
+        }
+
+        h3, h4 {
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #c50040;
+        }
+
+        hr {
+            margin: 25px 0;
+            opacity: 0.1;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(45deg, #20c997, #28a745);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        /* Animation for form appearance */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .btn-custom, .btn-secondary, .btn-success {
+                width: 100%;
+                margin-bottom: 10px;
+            }
         }
     </style>
+
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 
@@ -175,9 +317,14 @@ if (!$manufacturer_query) {
     </div>
 </nav>
 
+<br>
+<br>
+
 <div class="container">
     <div class="card">
-        <h3 class="text-center text-primary mb-3" style="color: #c50040;">Register Vehicle</h3>
+        <h3 class="text-center mb-4">
+            <i class="fas fa-car mr-2"></i> Register Vehicle
+        </h3>
         
         <?php if (isset($message)) {
             foreach ($message as $msg) {
@@ -188,10 +335,10 @@ if (!$manufacturer_query) {
         <form action="" method="post">
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label">Plate Number</label>
+                    <label class="form-label"><i class="fas fa-id-card mr-2"></i>Plate Number</label>
                     <input type="text" name="plateno" class="form-control" required>
                     
-                    <label class="form-label mt-2">Manufacturer</label>
+                    <label class="form-label mt-2"><i class="fas fa-truck mr-2"></i>Manufacturer</label>
                     <select name="manufacturer" id="manufacturer" class="form-select" required>
                         <option value="">Select Manufacturer</option>
                         <?php while ($manufacturer = mysqli_fetch_assoc($manufacturer_query)) {
@@ -199,17 +346,17 @@ if (!$manufacturer_query) {
                         } ?>
                     </select>
                     
-                    <label class="form-label mt-2">Car Model</label>
+                    <label class="form-label mt-2"><i class="fas fa-car-side mr-2"></i>Car Model</label>
                     <select name="carmodel" id="carmodel" class="form-select" required>
                         <option value="">Select Model</option>
                     </select>
                     
-                    <label class="form-label mt-2">Body Number</label>
+                    <label class="form-label mt-2"><i class="fas fa-car-side mr-2"></i>Body Number</label>
                     <input type="text" name="bodyno" class="form-control" required>
                 </div>
                 
                 <div class="col-md-6">
-                    <label class="form-label">Year</label>
+                    <label class="form-label"><i class="fas fa-calendar-alt mr-2"></i>Year</label>
                     <select name="year" class="form-select" required>
                         <option value="">Select Year</option>
                         <?php for ($year = 1990; $year <= date("Y"); $year++) {
@@ -217,7 +364,7 @@ if (!$manufacturer_query) {
                         } ?>
                     </select>
                     
-                    <label class="form-label mt-2">Engine CC</label>
+                    <label class="form-label mt-2"><i class="fas fa-tachometer-alt mr-2"></i>Engine CC</label>
                     <select name="enginecc" class="form-select" required>
                         <option value="">Select CC</option>
                         <?php for ($cc = 100; $cc <= 1000; $cc += 50) {
@@ -225,7 +372,7 @@ if (!$manufacturer_query) {
                         } ?>
                     </select>
                     
-                    <label class="form-label mt-2">Color</label>
+                    <label class="form-label mt-2"><i class="fas fa-paint-brush mr-2"></i>Color</label>
                     <select name="color" class="form-select" required>
                         <option value="">Select Color</option>
                         <option value="Red">Red</option>
@@ -234,7 +381,7 @@ if (!$manufacturer_query) {
                         <option value="White">White</option>
                     </select>
                     
-                    <label class="form-label mt-2">Gas Type</label>
+                    <label class="form-label mt-2"><i class="fas fa-gas-pump mr-2"></i>Gas Type</label>
                     <select name="gas" class="form-select" required>
                         <option value="Regular">Regular</option>
                         <option value="Premium">Premium</option>
@@ -243,7 +390,9 @@ if (!$manufacturer_query) {
                 </div>
                 
                 <div class="col-12 text-center mt-3">
-                    <button type="submit" name="submit" class="btn btn-custom w-100">Register Now</button>
+                    <button type="submit" name="submit" class="btn btn-custom">
+                        <i class="fas fa-check-circle mr-2"></i>Register Now
+                    </button>
                     <p class="mt-3">Back to <a href="home.php" class="text-primary">Home</a></p>
                 </div>
             </div>
@@ -277,13 +426,30 @@ if (!$manufacturer_query) {
 </div>
 
 <script>
-    $('#toggleForm').click(function () {
-        $('#addForms').slideToggle();
-    });
+    $(document).ready(function() {
+        // Hide addForms section initially (redundant but good practice)
+        $('#addForms').hide();
 
-    $('#manufacturer').change(function () {
-        $.post('get_carmodels.php', { manufacturer_id: $(this).val() }, function(response) {
-            $('#carmodel').html(response);
+        // Toggle form visibility with animation
+        $('#toggleForm').click(function() {
+            $('#addForms').slideToggle(400, 'swing');
+        });
+
+        $(document).ajaxStart(function() {
+            $('#carmodel').html('<option>Loading...</option>');
+        });
+
+        $('#manufacturer').change(function() {
+            const manufacturerId = $(this).val();
+            if (manufacturerId) {
+                $.post('get_carmodels.php', { 
+                    manufacturer_id: manufacturerId 
+                }, function(response) {
+                    $('#carmodel').html(response).fadeIn();
+                });
+            } else {
+                $('#carmodel').html('<option value="">Select Model</option>');
+            }
         });
     });
 </script>
