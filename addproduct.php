@@ -3,7 +3,7 @@ session_start();
 include 'config.php'; // Assuming this file contains your database connection code
 
 if(!isset($_SESSION['companyid'])){
-    header('location:clogin.php');
+    header('location:index.php');
     exit();
  } 
 
@@ -110,7 +110,10 @@ function renderNavLink($role, $companyid) {
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <?php echo renderNavLink($role, $companyid); ?>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="request.php?companyid=<?php echo $companyid; ?>">Request</a>
+                        <a class="nav-link text-white" href="report.php?companyid=<?php echo $companyid; ?>">Report</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="Request.php?companyid=<?php echo $companyid; ?>">Request</a>
                     </li>
                 </ul>
             </div>

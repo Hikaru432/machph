@@ -775,12 +775,15 @@ $result = $fetch_stmt->get_result();
     });
     </script>
 
+
+
+
 <script>
 // Function to update progress percentage
 function updateProgress() {
     var totalCheckboxes = document.querySelectorAll('input[type="checkbox"]').length;
     var checkedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked').length;
-    var progressPercentage = (checkedCheckboxes / totalCheckboxe    s) * 100;
+    var progressPercentage = (checkedCheckboxes / totalCheckboxes) * 100;
     document.querySelector('.progress-bar').style.width = progressPercentage + '%';
     document.querySelector('.progress-bar').innerText = progressPercentage.toFixed(2) + '%';
 }

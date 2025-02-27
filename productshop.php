@@ -137,6 +137,8 @@ if (mysqli_num_rows($branch_result) > 0) {
                 <li class="nav-item"><a class="nav-link text-white" href="shop.php">Shop</a></li>
                 <li class="nav-item"><a class="nav-link text-white" href="company.php">Company</a></li>
                 <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="#">Notification</a></li>
+            </ul>
             </ul>
         </div>
     </div>

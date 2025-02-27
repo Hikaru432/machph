@@ -47,6 +47,39 @@
     // Fetch the additional information about the selected card
     $company_info = mysqli_fetch_assoc($company_select);
 
+    // Add this after the car_select query
+    $notification_query = "SELECT a.*, r.user_id, r.companyid, au.companyname 
+                          FROM action a 
+                          JOIN requestproduct r ON a.request_id = r.id 
+                          JOIN autoshop au ON r.companyid = au.companyid 
+                          WHERE r.user_id = '$user_id' 
+                          ORDER BY a.created_at DESC";
+    $notification_result = mysqli_query($conn, $notification_query);
+
+    // Get unread notification count
+    $unread_count = mysqli_num_rows($notification_result);
+
+    // Fetch the company information based on the companyname
+    $companyname = isset($_SESSION['companyname']) ? $_SESSION['companyname'] : null;
+
+    if ($companyname) {
+        $company_query = "SELECT companyid FROM autoshop WHERE companyname = ?";
+        $company_stmt = mysqli_prepare($conn, $company_query);
+        mysqli_stmt_bind_param($company_stmt, "s", $companyname);
+        mysqli_stmt_execute($company_stmt);
+        $company_result = mysqli_stmt_get_result($company_stmt);
+        
+        if ($company_row = mysqli_fetch_assoc($company_result)) {
+            $session_companyid = $company_row['companyid']; // Now we have the companyid
+        } else {
+            // Handle the case where the company is not found
+            $session_companyid = null; // or set a default value
+        }
+    } else {
+        // Handle the case where companyname is not set
+        $session_companyid = null; // or set a default value
+    }
+
     ?>
 
     <!DOCTYPE html>
@@ -320,6 +353,31 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link" href="home.php">Dashboard</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown">
+                                Notification
+                                <?php if($unread_count > 0) {
+                                    echo " <span class='badge bg-danger'>$unread_count</span>";
+                                }
+                                ?>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="notificationDropdown" style="width: 300px; max-height: 400px; overflow-y: auto;">
+                                <?php while($notification = mysqli_fetch_assoc($notification_result)) : ?>
+                                <li>
+                                    <a class="dropdown-item" href="notification_details.php?action_id=<?php echo $notification['id']; ?>">
+                                        <div class="d-flex justify-content-between">
+                                            <strong><?php echo $notification['companyname']; ?></strong>
+                                            <small class="text-muted"><?php echo date('M d', strtotime($notification['created_at'])); ?></small>
+                                        </div>
+                                        <div><?php echo $notification['action_type']; ?></div>
+                                    </a>
+                                </li>
+                                <?php endwhile; ?>
+                                <?php if($unread_count == 0) : ?>
+                                <li><div class="dropdown-item text-muted">No notifications</div></li>
+                                <?php endif; ?>
+                            </ul>
+                        </li>
                         <li class="nav-item"><a class="nav-link" href="profile.php">Profile</a></li>
                         <li class="nav-item"><a class="nav-link" href="shop.php">Shop</a></li>
                         <li class="nav-item"><a class="nav-link" href="register.php">Register</a></li>  
@@ -331,9 +389,52 @@
         <section class="welcome-section">
             <div class="container text-center">
                 <h1 class="fade-in">Welcome to <?php echo isset($company_info['companyname']) ? $company_info['companyname'] : ''; ?></h1>
-                <a href="productshop.php?companyid=<?php echo $company_info['companyid']; ?>" class="btn btn-lg btn-custom">Visit Shop</a>
+                <a href="productshop.php?companyid=<?php echo isset($session_companyid) ? $session_companyid : ''; ?>" class="btn btn-lg btn-custom">Visit Shop</a>
+                
+                <!-- Message Button -->
+                <button type="button" class="btn btn-primary btn-sm" style="position: absolute; top: 20px; right: 20px;" data-bs-toggle="modal" data-bs-target="#chatModal">
+                    Messages
+                </button>
             </div>
         </section>
+ 
+          <!-- Chat Modal -->
+                <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="chatModalLabel">Chat</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                            <div id="chatbox" style="max-height: 300px; overflow-y: auto;">
+                                <!-- Display messages here -->
+                                <?php
+                                // Assuming you have already started the session and have the user_id in the session
+                                $session_user_id = $_SESSION['user_id']; // Get the user_id from the session
+
+                                // Fetch messages for the specific user_id and companyid
+                                $message_query = "SELECT * FROM cashier WHERE companyid = ? AND user_id = ? ORDER BY date ASC";
+                                $message_stmt = mysqli_prepare($conn, $message_query);
+                                mysqli_stmt_bind_param($message_stmt, "ii", $session_companyid, $session_user_id); // Use session variables
+                                mysqli_stmt_execute($message_stmt);
+                                $message_result = mysqli_stmt_get_result($message_stmt);
+
+                                while ($mess    age = mysqli_fetch_assoc($message_result)) {
+                                    // Determine the alignment based on the role 
+                                    $alignment = htmlspecialchars($message['role']) === 'cashier' ? 'text-left' : 'text-right';
+                                    echo '<div class="' . $alignment . '"><strong>' . htmlspecialchars($message['role']) . ':</strong> ' . htmlspecialchars($message['message']) . '</div>';
+                                }
+                                ?>
+                            </div>
+                                <div class="input-group mt-2">
+                                    <input type="text" class="form-control" name="message" id="messageInput" placeholder="Type your message here...">
+                                    <button class="btn btn-primary" type="button" id="sendMessage">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
         <div class="container">
             <div class="card fade-in">
@@ -344,7 +445,7 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Manufacturer</th>
+                                <th>Manufacturer</th>   
                                 <th>Model</th>
                                 <th>Plate No</th>
                                 <th>Color</th>
@@ -371,6 +472,33 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Handle sending messages
+                document.getElementById('sendMessage').addEventListener('click', function() {
+                    const message = document.getElementById('messageInput').value;
+                    const role = 'user'; // Set the role to 'user' for the current user
+
+                    // Send the message using fetch
+                    fetch('save_message.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ message: message, requestId: <?php echo $requestId; ?>, role: role })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            document.getElementById('chatbox').innerHTML += `<div class="text-right"><strong>${role}:</strong> ${message}</div>`;
+                            document.getElementById('messageInput').value = ''; // Clear input
+                        } else {
+                            alert('Error: ' + data.error);
+                        }
+                    });
+                });
+            });
+        </script>
     </body>
 
     </html>
